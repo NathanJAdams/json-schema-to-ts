@@ -1,8 +1,9 @@
 import { Options } from '../../Options';
-import { EnumTS } from '../../ts';
+import { EnumTS, PrimitiveTS, TSType } from '../../ts';
 import { SchemaLocation } from '../..';
 import { TSGenerator } from '..';
 import { combineElements } from './generate';
+import { primitiveGenerator } from './primitive-generator';
 
 const BLANK_REFERENCES: Set<string> = new Set();
 
@@ -22,8 +23,16 @@ const enumGenerator: TSGenerator<EnumTS> = {
     lines.push('};');
     return combineElements(...lines);
   },
-  inline: (): string => {
-    throw Error('Cannot generate an inline enum');
+  inline: (ts: EnumTS, options: Options, references: Set<string>): string => {
+    if (ts.primitiveType) {
+      const primitiveTS: PrimitiveTS = {
+        tsType: TSType.PRIMITIVE,
+        id: ts.id,
+        primitiveType: ts.primitiveType
+      };
+      return primitiveGenerator.inline(primitiveTS, options, references);
+    }
+    throw Error('Cannot generate an inline enum without a primitive type');
   }
 };
 

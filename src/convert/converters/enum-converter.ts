@@ -1,7 +1,7 @@
 import { Schema } from '../..';
 import { SchemaConverter } from '..';
 import { Options } from '../../Options';
-import { EnumTS, TSType } from '../../ts';
+import { EnumTS, PrimitiveType, TSType } from '../../ts';
 
 const BAD_NAME_CHAR_REGEX = /[^a-zA-Z0-9_]/gi;
 const GOOD_INITIAL_CHAR_REGEX = /^[a-zA-Z_]/i;
@@ -94,10 +94,14 @@ const enumConverter: SchemaConverter<EnumTS> = (schema: Schema, options: Options
   const values: Map<string, string> | Map<string, number> = (enumValues.strings.size > 0) || (options.ts.enums.booleanNullStringValues && hasBooleanNulls)
     ? getEnumStringValues(enumValues, options)
     : getEnumNumberValues(enumValues);
+  const primitiveType: PrimitiveType | undefined = Object.values(PrimitiveType).includes(schema.type as PrimitiveType)
+    ? schema.type as PrimitiveType
+    : undefined;
   return {
     tsType: TSType.ENUM,
     id: schema.$id,
-    values
+    values,
+    primitiveType
   };
 };
 
