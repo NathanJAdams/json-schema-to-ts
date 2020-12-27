@@ -1,6 +1,5 @@
 import * as path from 'path';
 import { TS, TSType } from '../ts';
-import { Options } from '../Options';
 import { SchemaLocation } from '..';
 import {
   collectionGenerator,
@@ -11,9 +10,9 @@ import {
 } from './generators';
 
 interface TSGenerator<T extends TS> {
-  root: (ts: T, options: Options, location: SchemaLocation) => string;
-  definition: (ts: T, options: Options, definitionId: string, references: Set<string>) => string;
-  inline: (ts: T, options: Options, references: Set<string>) => string;
+  root: (ts: T, location: SchemaLocation) => string;
+  definition: (ts: T, definitionId: string, references: Set<string>) => string;
+  inline: (ts: T, references: Set<string>) => string;
 }
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -40,11 +39,11 @@ const generator = (tsType: TSType): TSGenerator<any> => {
   }
 };
 
-const generateRoot = (ts: TS, options: Options, location: SchemaLocation): string => {
-  return generator(ts.tsType).root(ts, options, location);
+const generateRoot = (ts: TS, location: SchemaLocation): string => {
+  return generator(ts.tsType).root(ts, location);
 };
 
-const generateContent = (filesTS: Map<string, TS>, options: Options): Map<string, string> => {
+const generateContent = (filesTS: Map<string, TS>): Map<string, string> => {
   const fileContent: Map<string, string> = new Map();
   filesTS.forEach((ts: TS, relativeFile: string) => {
     const lastSepIndex = relativeFile.lastIndexOf(path.sep);
@@ -54,7 +53,7 @@ const generateContent = (filesTS: Map<string, TS>, options: Options): Map<string
       relativeDir,
       file
     };
-    const generated: string = generateRoot(ts, options, location);
+    const generated: string = generateRoot(ts, location);
     fileContent.set(relativeFile, generated);
   });
   return fileContent;

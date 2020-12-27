@@ -1,4 +1,5 @@
-import { TS, TSType } from '.';
+import { TSType } from '.';
+import { ComplexTS } from './ComplexTS';
 
 enum UntypedType {
   ANY = 'any',
@@ -6,7 +7,7 @@ enum UntypedType {
   UNKNOWN = 'unknown'
 }
 
-interface UntypedTS extends TS {
+interface UntypedTS extends ComplexTS {
   tsType: TSType.UNTYPED;
   untypedType: UntypedType;
 }

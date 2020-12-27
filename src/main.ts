@@ -15,7 +15,7 @@ const main = (optionsPartial: PartialDeep<Options>): Promise<void> => {
     .then((fileContents) => parse(fileContents))
     .then((fileSchemas) => convertMany(fileSchemas, options))
     // TODO check consistency
-    .then((fileSchemas) => generateContent(fileSchemas, options))
+    .then((fileSchemas) => generateContent(fileSchemas))
     .then((filesContent) => write(filesContent, options));
 };
 

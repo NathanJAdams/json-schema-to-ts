@@ -13,7 +13,10 @@ const tupleConverter: SchemaConverter<TupleTS> = (schema: Schema, options: Optio
   if (!items || !Array.isArray(items)) {
     return undefined;
   }
-  const elementTypes: TS[] = convertArray(items, options);
+  const elementTypes: TS[] | undefined = convertArray(items, options);
+  if (!elementTypes) {
+    return undefined;
+  }
   const definitions: Map<string, TS> | undefined = convertDefinitions(schema.definitions, options);
   return {
     tsType: TSType.TUPLE,

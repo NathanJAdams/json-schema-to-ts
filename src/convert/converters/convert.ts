@@ -3,7 +3,10 @@ import { TS } from '../../ts';
 import { convert } from '..';
 import { Options } from '../../Options';
 
-const convertArray = (array: Schema[], options: Options): TS[] => {
+const convertArray = (array: Schema[] | undefined, options: Options): TS[] | undefined => {
+  if (array === undefined) {
+    return undefined;
+  }
   const converted: TS[] = [];
   array.forEach((schema: Schema) => {
     const ts: TS | undefined = convert(schema, options);

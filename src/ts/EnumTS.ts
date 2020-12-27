@@ -1,11 +1,10 @@
 import { TSType } from '.';
-import { PrimitiveType } from './PrimitiveTS';
+import { SchemaEnum } from '../Schema';
 import { TS } from './TS';
 
 interface EnumTS extends TS {
   tsType: TSType.ENUM;
-  values: Map<string, string> | Map<string, number>;
-  primitiveType?: PrimitiveType;
+  values: SchemaEnum;
 }
 
 export {

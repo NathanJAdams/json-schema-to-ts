@@ -1,18 +1,21 @@
-import { Options } from '../../Options';
 import { ComplexTS, TS } from '../../ts';
 import { generator } from '..';
 
-const combineElements = (...elements: string[]): string => {
-  return elements.filter((_) => (_)).join('\n');
+const combineNewline = (...elements: string[]): string => {
+  return combine('\n', ...elements);
 };
 
-const generateDefinitions = (ts: ComplexTS, options: Options, references: Set<string>): string => {
+const combine = (joiner: string, ...elements: string[]): string => {
+  return elements.filter((_) => (_)).join(joiner);
+};
+
+const generateDefinitions = (ts: ComplexTS, references: Set<string>): string => {
   if (ts.definitions === undefined) {
     return '';
   }
   const definitionContents: string[] = [];
   ts.definitions.forEach((definition: TS, definitionId: string) => {
-    const generatedDefinition: string = generator(definition.tsType).definition(definition, options, definitionId, references);
+    const generatedDefinition: string = generator(definition.tsType).definition(definition, definitionId, references);
     definitionContents.push(generatedDefinition);
   });
   return definitionContents.join('\n');
@@ -27,7 +30,8 @@ const generateImports = (references: Set<string>): string => {
 };
 
 export {
-  combineElements,
+  combine,
+  combineNewline,
   generator,
   generateDefinitions,
   generateImports
