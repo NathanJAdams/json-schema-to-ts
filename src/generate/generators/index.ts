@@ -1,3 +1,3 @@
-export * from './CollectionGenerator';
-export * from './PrimitiveGenerator';
-export * from './TupleGenerator';
+export * from './collection-generator';
+export * from './primitive-generator';
+export * from './tuple-generator';

@@ -2,6 +2,10 @@ import { Options } from '../../Options';
 import { ComplexTS, TS } from '../../ts';
 import { generator } from '..';
 
+const combineElements = (...elements: string[]): string => {
+  return elements.filter((_) => (_)).join('\n');
+};
+
 const generateDefinitions = (ts: ComplexTS, options: Options, references: Set<string>): string => {
   if (ts.definitions === undefined) {
     return '';
@@ -23,6 +27,7 @@ const generateImports = (references: Set<string>): string => {
 };
 
 export {
+  combineElements,
   generator,
   generateDefinitions,
   generateImports

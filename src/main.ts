@@ -12,14 +12,10 @@ const main = (optionsPartial: PartialDeep<Options>): Promise<void> => {
     // TODO check source files exist
     // TODO check destination is clean or pre clean
     .then(() => read(options))
-    .then((res) => { console.log(res); return res; })
     .then((fileContents) => parse(fileContents))
-    .then((res) => { console.log(res); return res; })
     .then((fileSchemas) => convertMany(fileSchemas))
-    .then((res) => { console.log(res); return res; })
     // TODO check consistency
     .then((fileSchemas) => generateContent(fileSchemas, options))
-    .then((res) => { console.log(res); return res; })
     .then((filesContent) => write(filesContent, options));
 };
 

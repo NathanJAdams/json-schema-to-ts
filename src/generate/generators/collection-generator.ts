@@ -2,7 +2,7 @@ import { Options } from '../../Options';
 import { CollectionTS, CollectionType } from '../../ts';
 import { SchemaLocation } from '../..';
 import { TSGenerator } from '..';
-import { generateDefinitions, generateImports, generator } from './generate';
+import { combineElements, generateDefinitions, generateImports, generator } from './generate';
 
 const collectionGenerator: TSGenerator<CollectionTS> = {
   root: (ts: CollectionTS, options: Options, location: SchemaLocation): string => {
@@ -10,7 +10,7 @@ const collectionGenerator: TSGenerator<CollectionTS> = {
     const definition: string = collectionGenerator.definition(ts, options, location.file, references);
     const imports: string = generateImports(references);
     const definitions: string = generateDefinitions(ts, options, references);
-    return `${imports}'\n\nexport ${definition}\n${definitions}`;
+    return combineElements(imports, definition, definitions);
   },
   definition: (ts: CollectionTS, options: Options, definitionId: string, references: Set<string>): string => {
     const inlined: string = collectionGenerator.inline(ts, options, references);
@@ -24,7 +24,7 @@ const collectionGenerator: TSGenerator<CollectionTS> = {
     const suffix = (isArray)
       ? '[]'
       : '>';
-    const inlinedElementType = generator(ts.elementType.tsType).inline(ts, options, references);
+    const inlinedElementType = generator(ts.elementType.tsType).inline(ts.elementType, options, references);
     return `${prefix}${inlinedElementType}${suffix}`;
   }
 };

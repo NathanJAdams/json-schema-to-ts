@@ -5,11 +5,11 @@ import { convertArray, convertDefinitions } from './convert';
 
 const tupleConverter: SchemaConverter<TupleTS> = (schema: Schema): TupleTS | undefined => {
   const type: string | undefined = schema.type;
-  if (type !== undefined && type !== 'array') {
+  if (type && type !== 'array') {
     return undefined;
   }
-  const items: Schema[] | undefined = schema.items;
-  if (items === undefined || items.length === 1) {
+  const items: Schema | Schema[] | undefined = schema.items;
+  if (!items || !Array.isArray(items)) {
     return undefined;
   }
   const elementTypes: TS[] = convertArray(items);

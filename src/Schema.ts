@@ -10,7 +10,7 @@ interface Schema {
   type?: string;
   $ref?: string;
   enum?: SchemaEnum;
-  items?: Schema[];
+  items?: Schema | Schema[];
   uniqueItems?: boolean;
   allOf?: Schema[];
   anyOf?: Schema[];

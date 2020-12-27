@@ -6,7 +6,8 @@ import {
   integerConverter,
   numberConverter,
   stringConverter,
-  collectionConverter
+  collectionConverter,
+  tupleConverter
 } from './converters';
 import { TS } from '../ts';
 
@@ -16,13 +17,14 @@ const CONVERTERS: SchemaConverter<TS>[] = [
   integerConverter,
   numberConverter,
   stringConverter,
-  collectionConverter
+  collectionConverter,
+  tupleConverter
 ];
 
 const convert = (schema: Schema, converters = CONVERTERS): TS | undefined => {
   for (const converter of converters) {
     const converted: TS | undefined = converter(schema);
-    if (converted !== undefined) {
+    if (converted) {
       return converted;
     }
   }
@@ -33,7 +35,7 @@ const convertMany = (fileSchemas: Map<string, Schema>, converters = CONVERTERS):
   const convertedTypes: Map<string, TS> = new Map();
   fileSchemas.forEach((schema: Schema, file: string) => {
     const converted = convert(schema, converters);
-    if (converted !== undefined) {
+    if (converted) {
       convertedTypes.set(file, converted);
     }
   });

@@ -5,14 +5,14 @@ import { convertDefinitions } from './convert';
 
 const collectionConverter: SchemaConverter<CollectionTS> = (schema: Schema): CollectionTS | undefined => {
   const type: string | undefined = schema.type;
-  if (type !== undefined && type !== 'array') {
+  if (type && type !== 'array') {
     return undefined;
   }
-  const items: Schema[] | undefined = schema.items;
-  if (items === undefined || items.length !== 1) {
+  const items: Schema | Schema[] | undefined = schema.items;
+  if (items === undefined || Array.isArray(items)) {
     return undefined;
   }
-  const elementSchema: Schema = items[0];
+  const elementSchema: Schema = items;
   const elementType: TS | undefined = convert(elementSchema);
   if (elementType === undefined) {
     return undefined;
