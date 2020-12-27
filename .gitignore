@@ -1,0 +1,13 @@
+# Node artifact files
+artifacts/
+build/
+node_modules/
+
+# Log files
+*.log
+
+# JetBrains IDE
+.idea/
+
+# VSCode IDE
+.vscode/

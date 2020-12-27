@@ -1,0 +1,15 @@
+# Node artifact files
+artifacts/
+build/
+node_modules/
+
+src/type-fest/PartialDeep.ts
+
+# Log files
+*.log
+
+# JetBrains IDE
+.idea/
+
+# VSCode IDE
+.vscode/

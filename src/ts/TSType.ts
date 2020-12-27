@@ -1,0 +1,13 @@
+enum TSType {
+  COLLECTION = 'COLLECTION',
+  COMBINATION = 'COMBINATION',
+  ENUM = 'ENUM',
+  OBJECT = 'OBJECT',
+  PRIMITIVE = 'PRIMITIVE',
+  REFERENCE = 'REFERENCE',
+  TUPLE = 'TUPLE'
+}
+
+export {
+  TSType
+};
