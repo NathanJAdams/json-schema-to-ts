@@ -1,15 +1,9 @@
+import { UntypedType } from './ts';
 import { PartialDeep } from './type-fest';
 
 enum OptionalFieldPattern {
   QUESTION = 'fieldName?',
   PIPE_UNDEFINED = 'Type | undefined'
-}
-
-interface EnumOptions {
-  fixedPrefix: string;
-  badNameCharReplacement: string;
-  booleanNullUpperCaseNames: boolean;
-  booleanNullStringValues: boolean;
 }
 
 interface Options {
@@ -28,8 +22,15 @@ interface Options {
     };
   };
   ts: {
-    enums: false | EnumOptions;
+    enums: {
+      use: boolean;
+      fixedPrefix: string;
+      badNameCharReplacement: string;
+      booleanNullUpperCaseNames: boolean;
+      booleanNullStringValues: boolean;
+    };
     optionalFields: OptionalFieldPattern;
+    untyped: UntypedType;
   };
 }
 
@@ -39,7 +40,7 @@ const DEFAULT_OPTIONS: Options = {
       dir: 'src/schemas',
       encoding: 'utf-8',
       failOnEmpty: true,
-      recursive: false
+      recursive: true
     },
     destination: {
       dir: 'src/generated',
@@ -49,12 +50,14 @@ const DEFAULT_OPTIONS: Options = {
   },
   ts: {
     enums: {
+      use: true,
       fixedPrefix: '_',
       badNameCharReplacement: '_',
       booleanNullUpperCaseNames: true,
       booleanNullStringValues: false
     },
-    optionalFields: OptionalFieldPattern.QUESTION
+    optionalFields: OptionalFieldPattern.QUESTION,
+    untyped: UntypedType.UNKNOWN
   }
 };
 
@@ -75,18 +78,15 @@ const createOptions = (options: PartialDeep<Options>): Options => {
     ts: {
       ...DEFAULT_OPTIONS.ts,
       ...options?.ts,
-      enums: (options.ts?.enums)
-        ? {
-          ...DEFAULT_OPTIONS.ts.enums as EnumOptions,
-          ...options.ts.enums
-        }
-        : false
+      enums: {
+        ...DEFAULT_OPTIONS.ts.enums,
+        ...options?.ts?.enums
+      }
     }
   };
 };
 
 export {
-  EnumOptions,
   OptionalFieldPattern,
   Options,
   DEFAULT_OPTIONS,

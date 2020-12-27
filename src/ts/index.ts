@@ -7,3 +7,4 @@ export * from './PrimitiveTS';
 export * from './TS';
 export * from './TSType';
 export * from './TupleTS';
+export * from './UntypedTS';

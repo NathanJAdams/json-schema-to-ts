@@ -20,17 +20,7 @@ const main = (optionsPartial: PartialDeep<Options>): Promise<void> => {
 };
 
 const invoke = (): void => {
-  const options: PartialDeep<Options> = {
-    files: {
-      source: {
-        recursive: true
-      }
-    },
-    ts: {
-      enums: {
-      }
-    }
-  };
+  const options: PartialDeep<Options> = {};
   main(options);
 };
 

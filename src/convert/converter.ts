@@ -8,7 +8,8 @@ import {
   numberConverter,
   stringConverter,
   collectionConverter,
-  tupleConverter
+  tupleConverter,
+  untypedConverter
 } from './converters';
 import { TS } from '../ts';
 import { Options } from '../Options';
@@ -21,7 +22,8 @@ const CONVERTERS: SchemaConverter<TS>[] = [
   numberConverter,
   stringConverter,
   collectionConverter,
-  tupleConverter
+  tupleConverter,
+  untypedConverter
 ];
 
 const convert = (schema: Schema, options: Options, converters = CONVERTERS): TS | undefined => {

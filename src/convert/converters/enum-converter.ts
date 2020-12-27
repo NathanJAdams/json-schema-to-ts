@@ -1,8 +1,7 @@
 import { Schema } from '../..';
 import { SchemaConverter } from '..';
-import { EnumTS } from '../../ts/EnumTS';
-import { EnumOptions, Options } from '../../Options';
-import { TSType } from '../../ts';
+import { Options } from '../../Options';
+import { EnumTS, TSType } from '../../ts';
 
 const BAD_NAME_CHAR_REGEX = /[^a-zA-Z0-9_]/gi;
 const GOOD_INITIAL_CHAR_REGEX = /^[a-zA-Z_]/i;
@@ -14,27 +13,27 @@ interface EnumValues {
   strings: Map<string, string>;
 }
 
-const cleanKey = (value: string | number | boolean | null, enumOptions: EnumOptions): string => {
+const cleanKey = (value: string | number | boolean | null, options: Options): string => {
   const type: string = typeof value;
   const rawKey = String(value);
-  const rawUpperCase = (enumOptions.booleanNullUpperCaseNames) && ((type === 'boolean' || type === 'object'))
+  const rawUpperCase = (options.ts.enums.booleanNullUpperCaseNames) && ((type === 'boolean' || type === 'object'))
     ? rawKey.toUpperCase()
     : rawKey;
-  const cleanedCharsKey: string = rawUpperCase.replace(BAD_NAME_CHAR_REGEX, enumOptions.badNameCharReplacement);
+  const cleanedCharsKey: string = rawUpperCase.replace(BAD_NAME_CHAR_REGEX, options.ts.enums.badNameCharReplacement);
   return cleanedCharsKey.match(GOOD_INITIAL_CHAR_REGEX)
     ? cleanedCharsKey
-    : enumOptions.fixedPrefix + cleanedCharsKey;
+    : options.ts.enums.fixedPrefix + cleanedCharsKey;
 };
 
-const stringValue = (value: null | boolean, enumOptions: EnumOptions): string => String(enumOptions.booleanNullStringValues ? value : (value) ? 1 : 0);
+const stringValue = (value: null | boolean, options: Options): string => String(options.ts.enums.booleanNullStringValues ? value : (value) ? 1 : 0);
 
-const getEnumStringValues = (enumValues: EnumValues, enumOptions: EnumOptions): Map<string, string> => {
+const getEnumStringValues = (enumValues: EnumValues, options: Options): Map<string, string> => {
   const values: Map<string, string> = new Map();
   enumValues.nulls.forEach((value: null, key: string) => {
-    values.set(key, stringValue(value, enumOptions));
+    values.set(key, stringValue(value, options));
   });
   enumValues.booleans.forEach((value: boolean, key: string) => {
-    values.set(key, stringValue(value, enumOptions));
+    values.set(key, stringValue(value, options));
   });
   enumValues.numbers.forEach((value: number, key: string) => {
     values.set(key, String(value));
@@ -66,7 +65,6 @@ const enumConverter: SchemaConverter<EnumTS> = (schema: Schema, options: Options
   if (!schema.enum) {
     return undefined;
   }
-  const enumOptions: EnumOptions = options.ts.enums;
   const enumValues: EnumValues = {
     strings: new Map(),
     numbers: new Map(),
@@ -74,27 +72,27 @@ const enumConverter: SchemaConverter<EnumTS> = (schema: Schema, options: Options
     nulls: new Map()
   };
   schema.enum.forEach((value: string | number | boolean | null) => {
-    const key: string = cleanKey(value, enumOptions);
+    const key: string = cleanKey(value, options);
     switch (typeof value) {
-      case 'string':
-        enumValues.strings.set(key, value);
-        break;
-      case 'number':
-        enumValues.numbers.set(key, value);
-        break;
-      case 'boolean':
-        enumValues.booleans.set(key, value);
-        break;
-      case 'object':
-        enumValues.nulls.set(key, value);
-        break;
-      default:
-        throw Error(`Cannot convert element: ${value}`);
+    case 'string':
+      enumValues.strings.set(key, value);
+      break;
+    case 'number':
+      enumValues.numbers.set(key, value);
+      break;
+    case 'boolean':
+      enumValues.booleans.set(key, value);
+      break;
+    case 'object':
+      enumValues.nulls.set(key, value);
+      break;
+    default:
+      throw Error(`Cannot convert element: ${value}`);
     }
   });
   const hasBooleanNulls = (enumValues.booleans.size > 0) || (enumValues.nulls.size > 0);
-  const values: Map<string, string> | Map<string, number> = (enumValues.strings.size > 0) || (enumOptions.booleanNullStringValues && hasBooleanNulls)
-    ? getEnumStringValues(enumValues, enumOptions)
+  const values: Map<string, string> | Map<string, number> = (enumValues.strings.size > 0) || (options.ts.enums.booleanNullStringValues && hasBooleanNulls)
+    ? getEnumStringValues(enumValues, options)
     : getEnumNumberValues(enumValues);
   return {
     tsType: TSType.ENUM,

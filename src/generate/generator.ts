@@ -6,7 +6,8 @@ import {
   collectionGenerator,
   enumGenerator,
   primitiveGenerator,
-  tupleGenerator
+  tupleGenerator,
+  untypedGenerator
 } from './generators';
 
 interface TSGenerator<T extends TS> {
@@ -32,6 +33,8 @@ const generator = (tsType: TSType): TSGenerator<any> => {
     //   return undefined;
   case TSType.TUPLE:
     return tupleGenerator;
+  case TSType.UNTYPED:
+    return untypedGenerator;
   default:
     throw Error(`Cannot generate content for type: ${tsType}`);
   }

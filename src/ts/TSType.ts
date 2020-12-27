@@ -5,7 +5,8 @@ enum TSType {
   OBJECT = 'OBJECT',
   PRIMITIVE = 'PRIMITIVE',
   REFERENCE = 'REFERENCE',
-  TUPLE = 'TUPLE'
+  TUPLE = 'TUPLE',
+  UNTYPED = 'UNTYPED'
 }
 
 export {
