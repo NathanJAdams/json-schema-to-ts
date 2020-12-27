@@ -13,7 +13,7 @@ const main = (optionsPartial: PartialDeep<Options>): Promise<void> => {
     // TODO check destination is clean or pre clean
     .then(() => read(options))
     .then((fileContents) => parse(fileContents))
-    .then((fileSchemas) => convertMany(fileSchemas))
+    .then((fileSchemas) => convertMany(fileSchemas, options))
     // TODO check consistency
     .then((fileSchemas) => generateContent(fileSchemas, options))
     .then((filesContent) => write(filesContent, options));
@@ -24,6 +24,10 @@ const invoke = (): void => {
     files: {
       source: {
         recursive: true
+      }
+    },
+    ts: {
+      enums: {
       }
     }
   };

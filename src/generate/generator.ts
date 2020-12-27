@@ -2,7 +2,12 @@ import * as path from 'path';
 import { TS, TSType } from '../ts';
 import { Options } from '../Options';
 import { SchemaLocation } from '..';
-import { collectionGenerator, primitiveGenerator, tupleGenerator } from './generators';
+import {
+  collectionGenerator,
+  enumGenerator,
+  primitiveGenerator,
+  tupleGenerator
+} from './generators';
 
 interface TSGenerator<T extends TS> {
   root: (ts: T, options: Options, location: SchemaLocation) => string;
@@ -17,6 +22,8 @@ const generator = (tsType: TSType): TSGenerator<any> => {
     return collectionGenerator;
     // case TSType.COMBINATION:
     //   return undefined;
+  case TSType.ENUM:
+    return enumGenerator;
     // case TSType.OBJECT:
     //   return undefined;
   case TSType.PRIMITIVE:

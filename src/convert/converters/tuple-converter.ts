@@ -2,8 +2,9 @@ import { Schema } from '../..';
 import { TS, TSType, TupleTS } from '../../ts';
 import { SchemaConverter } from '..';
 import { convertArray, convertDefinitions } from './convert';
+import { Options } from '../../Options';
 
-const tupleConverter: SchemaConverter<TupleTS> = (schema: Schema): TupleTS | undefined => {
+const tupleConverter: SchemaConverter<TupleTS> = (schema: Schema, options: Options): TupleTS | undefined => {
   const type: string | undefined = schema.type;
   if (type && type !== 'array') {
     return undefined;
@@ -12,8 +13,8 @@ const tupleConverter: SchemaConverter<TupleTS> = (schema: Schema): TupleTS | und
   if (!items || !Array.isArray(items)) {
     return undefined;
   }
-  const elementTypes: TS[] = convertArray(items);
-  const definitions: Map<string, TS> | undefined = convertDefinitions(schema.definitions);
+  const elementTypes: TS[] = convertArray(items, options);
+  const definitions: Map<string, TS> | undefined = convertDefinitions(schema.definitions, options);
   return {
     tsType: TSType.TUPLE,
     id: schema.$id,

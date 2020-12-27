@@ -1,6 +1,7 @@
 export * from './CollectionTS';
 export * from './CombinationTS';
 export * from './ComplexTS';
+export * from './EnumTS';
 export * from './ObjectTS';
 export * from './PrimitiveTS';
 export * from './TS';

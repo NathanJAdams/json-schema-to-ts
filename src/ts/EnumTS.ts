@@ -1,10 +1,9 @@
 import { TSType } from '.';
-import { SchemaEnum } from '../Schema';
-import { ComplexTS } from './ComplexTS';
+import { TS } from './TS';
 
-interface EnumTS extends ComplexTS {
+interface EnumTS extends TS {
   tsType: TSType.ENUM;
-  values: SchemaEnum;
+  values: Map<string, string> | Map<string, number>;
 }
 
 export {

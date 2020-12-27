@@ -5,6 +5,13 @@ enum OptionalFieldPattern {
   PIPE_UNDEFINED = 'Type | undefined'
 }
 
+interface EnumOptions {
+  fixedPrefix: string;
+  badNameCharReplacement: string;
+  booleanNullUpperCaseNames: boolean;
+  booleanNullStringValues: boolean;
+}
+
 interface Options {
   files: {
     cwd?: string;
@@ -21,7 +28,7 @@ interface Options {
     };
   };
   ts: {
-    useEnums: boolean;
+    enums: false | EnumOptions;
     optionalFields: OptionalFieldPattern;
   };
 }
@@ -41,8 +48,13 @@ const DEFAULT_OPTIONS: Options = {
     }
   },
   ts: {
-    optionalFields: OptionalFieldPattern.QUESTION,
-    useEnums: false
+    enums: {
+      fixedPrefix: '_',
+      badNameCharReplacement: '_',
+      booleanNullUpperCaseNames: true,
+      booleanNullStringValues: false
+    },
+    optionalFields: OptionalFieldPattern.QUESTION
   }
 };
 
@@ -62,12 +74,19 @@ const createOptions = (options: PartialDeep<Options>): Options => {
     },
     ts: {
       ...DEFAULT_OPTIONS.ts,
-      ...options?.ts
+      ...options?.ts,
+      enums: (options.ts?.enums)
+        ? {
+          ...DEFAULT_OPTIONS.ts.enums as EnumOptions,
+          ...options.ts.enums
+        }
+        : false
     }
   };
 };
 
 export {
+  EnumOptions,
   OptionalFieldPattern,
   Options,
   DEFAULT_OPTIONS,
