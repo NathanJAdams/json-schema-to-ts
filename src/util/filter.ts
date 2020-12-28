@@ -1,8 +1,4 @@
-const filtered = (values: (string | undefined)[]): string[] => {
-  const f:string[]= values.filter((_) => (_)) as string[];
-  console.log('filtered values:'+f);
-  return f;
-};
+const filtered = (values: (string | undefined)[]): string[] => values.filter((_) => (_)) as string[];
 
 const filteredJoin = (values: (string | undefined)[], joiner?: string): string => values.filter((_) => (_)).join(joiner ? joiner : '');
 

@@ -28,20 +28,21 @@ const importsGenerator = (_schemaLocation: SchemaLocation, references: Set<strin
   if (references.size === 0) {
     return undefined;
   }
-  const paths: Map<string, string[]> = new Map();
+  const paths: Map<string, Set<string>> = new Map();
   references.forEach((reference: string) => {
     const name = path.basename(reference);
     const dir = reference.substring(0, name.length);
-    let names: string[] | undefined = paths.get(dir);
+    let names: Set<string> | undefined = paths.get(dir);
     if (!names) {
-      names = [];
+      names = new Set();
       paths.set(dir, names);
     }
-    names.push(name);
+    names.add(name);
   });
   const content: string[] = [];
-  paths.forEach((names: string[], dir: string) => {
-    const imported: string = names.join(', ');
+  paths.forEach((names: Set<string>, dir: string) => {
+    const sortedNames: string[] = Array.from(names).sort();
+    const imported: string = sortedNames.join(', ');
     // TODO make imports relative to schemaLocation
     content.push(`import { ${imported} } from '${dir}';`);
   });

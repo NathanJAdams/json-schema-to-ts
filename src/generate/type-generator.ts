@@ -22,16 +22,11 @@ const typeGenerator = (schema: Schema, namedSchemas: Map<string, Schema>, refere
   types.push(allOfGenerator(schema, namedSchemas, references, options));
   types.push(anyOfGenerator(schema, namedSchemas, references, options));
   types.push(oneOfGenerator(schema, namedSchemas, references, options));
-  console.log('type types: ' + types);
   const filteredLines: string[] = filtered(types);
-  console.log('type filteredLines: ' + filteredLines);
   if (filteredLines.length === 0) {
     throw Error(`Failed to generate type for: ${schema}`);
   }
-  console.log('type filteredLines length: '+filteredLines.length);
-  const joined: string = filteredLines.join('\n& ');
-  console.log('type joined: '+joined);
-  return joined;
+  return filteredLines.join('\n& ');
 };
 
 export {

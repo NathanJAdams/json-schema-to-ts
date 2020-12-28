@@ -8,24 +8,22 @@ const oneOfGenerator: TypeGenerator = (schema: Schema, namedSchemas: Map<string,
   if (!schema.oneOf || schema.oneOf.length === 0) {
     return undefined;
   }
-  console.log('OneOf');
   const lines: (string | undefined)[] = [];
   schema.oneOf.forEach((elementSchema: Schema) => {
     const elementContent: string | undefined = typeGenerator(elementSchema, namedSchemas, references, options);
     lines.push(elementContent);
   });
-  console.log('OneOf lines: ' + lines);
   const filteredLines: string[] = filtered(lines);
-  console.log('OneOf filteredLines: ' + filteredLines);
   if (filteredLines.length === 0) {
     return undefined;
   } else if (filteredLines.length === 1) {
     return filteredLines[0];
+  } else if (filteredLines.length > 8) {
+    throw Error('Cannot currently create OneOf type for more than 8 types');
   } else {
-    references.add('OneOf');
-    const joined = `OneOf_${filteredLines.length}<${filteredLines.join(', ')}>`;
-    console.log('OneOf joined: ' + joined);
-    return joined;
+    const typeName: string = `OneOf_${filteredLines.length}`;
+    references.add(`json-schema-to-ts/${typeName}`);
+    return `${typeName}<${filteredLines.join(', ')}>`;
   }
 };
 
