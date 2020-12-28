@@ -17,6 +17,7 @@ const main = (optionsPartial: PartialDeep<Options>): Promise<void> => {
     // TODO clean output dir if required
     // TODO check no extant files or can overwrite
     .then((filesContent) => write(filesContent, options));
+    // TODO add option to write index.ts files and group imports
 };
 
 const invoke = (): void => {

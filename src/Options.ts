@@ -24,7 +24,7 @@ interface Options {
     destination: {
       dir: string;
       preClean: boolean;
-      failOnExisting: boolean;
+      overwrite: boolean;
     };
   };
   ts: {
@@ -43,7 +43,7 @@ const DEFAULT_OPTIONS: Options = {
     },
     destination: {
       dir: 'src/generated',
-      failOnExisting: true,
+      overwrite: false,
       preClean: false
     }
   },
@@ -69,7 +69,7 @@ const createOptions = (options: PartialDeep<Options>): Options => {
     },
     ts: {
       ...DEFAULT_OPTIONS.ts,
-      ...options?.ts
+      ...options.ts
     }
   };
 };

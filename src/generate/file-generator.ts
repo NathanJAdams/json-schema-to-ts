@@ -28,23 +28,12 @@ const importsGenerator = (_schemaLocation: SchemaLocation, references: Set<strin
   if (references.size === 0) {
     return undefined;
   }
-  const paths: Map<string, Set<string>> = new Map();
+  const content: string[] = [];
   references.forEach((reference: string) => {
     const name = path.basename(reference);
-    const dir = reference.substring(0, name.length);
-    let names: Set<string> | undefined = paths.get(dir);
-    if (!names) {
-      names = new Set();
-      paths.set(dir, names);
-    }
-    names.add(name);
-  });
-  const content: string[] = [];
-  paths.forEach((names: Set<string>, dir: string) => {
-    const sortedNames: string[] = Array.from(names).sort();
-    const imported: string = sortedNames.join(', ');
-    // TODO make imports relative to schemaLocation
-    content.push(`import { ${imported} } from '${dir}';`);
+    const relativePath: string = tsPathGenerator(path.relative(_schemaLocation.relativeDir, reference));
+    const normalisedPath: string = tsPathGenerator(path.normalize(relativePath));
+    content.push(`import { ${name} } from '${normalisedPath}';`);
   });
   return content.join('\n');
 };
@@ -79,6 +68,8 @@ const definitionsGenerator = (definitions: Map<string, Schema> | undefined, name
 };
 
 const typeNameGenerator = (name: string, id?: string): string => (id) ? id : name;
+
+const tsPathGenerator = (relativePath: string): string => relativePath.startsWith('.') ? relativePath : '.' + path.sep + relativePath;
 
 export {
   fileGenerator

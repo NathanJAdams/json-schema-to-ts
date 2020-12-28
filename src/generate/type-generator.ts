@@ -24,7 +24,7 @@ const typeGenerator = (schema: Schema, namedSchemas: Map<string, Schema>, refere
   types.push(oneOfGenerator(schema, namedSchemas, references, options));
   const filteredLines: string[] = filtered(types);
   if (filteredLines.length === 0) {
-    throw Error(`Failed to generate type for: ${schema}`);
+    return options.ts.untyped;
   }
   return filteredLines.join('\n& ');
 };

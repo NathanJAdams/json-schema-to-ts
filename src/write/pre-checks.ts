@@ -18,7 +18,7 @@ const preChecker = (fileSchemas: Map<string, RootSchema>, options: Options): voi
   if (options.files.source.failOnEmpty) {
     throwOnNoInput(fileSchemas);
   }
-  if (options.files.destination.failOnExisting) {
+  if (!options.files.destination.overwrite) {
     fileSchemas.forEach((_schema: RootSchema, path: string) => {
       throwOnExtantPath(path);
     });

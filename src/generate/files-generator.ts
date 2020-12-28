@@ -7,7 +7,7 @@ const generate = (fileContents: Map<string, RootSchema>, options: Options): Map<
   const fileContent: Map<string, string> = new Map();
   fileContents.forEach((rootSchema: RootSchema, relativeFile: string) => {
     const lastSepIndex = relativeFile.lastIndexOf(path.sep);
-    const relativeDir: string = relativeFile.substring(0, lastSepIndex);
+    const relativeDir: string = '.' + path.sep + relativeFile.substring(0, lastSepIndex);
     const file: string = relativeFile.substring(lastSepIndex + 1);
     const location: SchemaLocation = {
       relativeDir,
