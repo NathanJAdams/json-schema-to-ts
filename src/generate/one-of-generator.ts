@@ -23,7 +23,7 @@ const oneOfGenerator: TypeGenerator = (schema: Schema, namedSchemas: Map<string,
     return filteredLines[0];
   } else {
     references.add('OneOf');
-    const joined = `OneOf<${filteredLines.join(', ')}>`;
+    const joined = `OneOf_${filteredLines.length}<${filteredLines.join(', ')}>`;
     console.log('OneOf joined: ' + joined);
     return joined;
   }
