@@ -3,7 +3,7 @@ artifacts/
 build/
 node_modules/
 
-src/type-fest/PartialDeep.ts
+src/types/
 
 # Log files
 *.log

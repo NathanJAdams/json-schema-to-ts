@@ -21,13 +21,13 @@ export type PartialDeep<T> = T extends Primitive
   ? PartialObjectDeep<T>
   : unknown;
 
-interface PartialMapDeep<KeyType, ValueType> extends Map<PartialDeep<KeyType>, PartialDeep<ValueType>> { }
+type PartialMapDeep<KeyType, ValueType> = Map<PartialDeep<KeyType>, PartialDeep<ValueType>>
 
-interface PartialSetDeep<T> extends Set<PartialDeep<T>> { }
+type PartialSetDeep<T> = Set<PartialDeep<T>>
 
-interface PartialReadonlyMapDeep<KeyType, ValueType> extends ReadonlyMap<PartialDeep<KeyType>, PartialDeep<ValueType>> { }
+type PartialReadonlyMapDeep<KeyType, ValueType> = ReadonlyMap<PartialDeep<KeyType>, PartialDeep<ValueType>>
 
-interface PartialReadonlySetDeep<T> extends ReadonlySet<PartialDeep<T>> { }
+type PartialReadonlySetDeep<T> = ReadonlySet<PartialDeep<T>>
 
 type PartialObjectDeep<ObjectType extends object> = {
   [KeyType in keyof ObjectType]?: PartialDeep<ObjectType[KeyType]>

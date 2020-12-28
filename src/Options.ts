@@ -1,5 +1,11 @@
-import { UntypedType } from './ts';
-import { PartialDeep } from './type-fest';
+import { PartialDeep } from './types';
+
+enum UntypedType {
+  ANY = 'any',
+  NEVER = 'never',
+  UNDEFINED = 'undefined',
+  UNKNOWN = 'unknown'
+}
 
 enum OptionalFieldPattern {
   QUESTION = 'fieldName?',
@@ -22,13 +28,6 @@ interface Options {
     };
   };
   ts: {
-    enums: {
-      use: boolean;
-      fixedPrefix: string;
-      badNameCharReplacement: string;
-      booleanNullUpperCaseNames: boolean;
-      booleanNullStringValues: boolean;
-    };
     optionalFields: OptionalFieldPattern;
     untyped: UntypedType;
   };
@@ -49,13 +48,6 @@ const DEFAULT_OPTIONS: Options = {
     }
   },
   ts: {
-    enums: {
-      use: true,
-      fixedPrefix: '_',
-      badNameCharReplacement: '_',
-      booleanNullUpperCaseNames: true,
-      booleanNullStringValues: false
-    },
     optionalFields: OptionalFieldPattern.QUESTION,
     untyped: UntypedType.UNKNOWN
   }
@@ -77,11 +69,7 @@ const createOptions = (options: PartialDeep<Options>): Options => {
     },
     ts: {
       ...DEFAULT_OPTIONS.ts,
-      ...options?.ts,
-      enums: {
-        ...DEFAULT_OPTIONS.ts.enums,
-        ...options?.ts?.enums
-      }
+      ...options?.ts
     }
   };
 };

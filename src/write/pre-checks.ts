@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { Options } from '../Options';
-import { TS } from '../ts';
+import { RootSchema } from '../schema';
 
 const throwOnExtantPath = (path: string): void => {
   if (fs.existsSync(path)) {
@@ -8,18 +8,18 @@ const throwOnExtantPath = (path: string): void => {
   }
 };
 
-const throwOnNoInput = (typeFiles: Map<TS, string>): void => {
-  if (!typeFiles || typeFiles.size === 0) {
+const throwOnNoInput = (fileSchemas: Map<string, RootSchema>): void => {
+  if (fileSchemas.size === 0) {
     throw Error('Pre-Check: No typescript types to output');
   }
 };
 
-const preChecker = (typeFiles: Map<TS, string>, options: Options): void => {
+const preChecker = (fileSchemas: Map<string, RootSchema>, options: Options): void => {
   if (options.files.source.failOnEmpty) {
-    throwOnNoInput(typeFiles);
+    throwOnNoInput(fileSchemas);
   }
   if (options.files.destination.failOnExisting) {
-    typeFiles.forEach((path: string) => {
+    fileSchemas.forEach((_schema: RootSchema, path: string) => {
       throwOnExtantPath(path);
     });
   }
