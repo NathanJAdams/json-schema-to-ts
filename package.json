@@ -1,5 +1,5 @@
 {
-  "name": "json-schema-to-ts",
+  "name": "json-schema-typescript-generator",
   "version": "1.0.0",
   "author": {
     "name": "Nathan Adams",
