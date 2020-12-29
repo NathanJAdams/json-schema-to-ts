@@ -1,6 +1,6 @@
 # Node artifact files
 artifacts/
-build/
+dist/
 node_modules/
 
 src/types/

@@ -1,6 +1,6 @@
 {
   "name": "json-schema-typescript-generator",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "author": {
     "name": "Nathan Adams",
     "url": "https://github.com/NathanJAdams"
@@ -16,10 +16,12 @@
     "ts",
     "typescript"
   ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "yarn lint && yarn tsc",
     "lint": "eslint . --fix",
-    "tsc": "rimraf ./build && tsc"
+    "tsc": "rimraf ./dist && tsc"
   },
   "dependencies": {
     "rimraf": "3.0.2"

@@ -23,6 +23,7 @@ const objectGenerator: TypeGenerator = (schema: Schema, namedSchemas: Map<string
     if (isPipeUndefined) {
       lineParts.push(' | undefined');
     }
+    lineParts.push(';');
     lines.push(lineParts.join(''));
   });
   lines.push('}');
