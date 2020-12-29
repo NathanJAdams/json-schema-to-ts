@@ -1,7 +1,7 @@
 import { Schema } from '../schema';
 import { TypeGenerator } from './TypeGenerator';
 import { typeGenerator } from './type-generator';
-import { Options } from '../Options';
+import { Options } from '../options';
 import { filtered } from '../util';
 
 const anyOfGenerator: TypeGenerator = (schema: Schema, namedSchemas: Map<string, Schema>, references: Set<string>, options: Options): string | undefined => {

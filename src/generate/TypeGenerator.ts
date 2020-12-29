@@ -1,4 +1,4 @@
-import { Options } from '../Options';
+import { Options } from '../options';
 import { Schema } from '../schema';
 
 interface TypeGenerator {

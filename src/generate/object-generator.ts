@@ -1,7 +1,7 @@
 import { Schema } from '../schema';
 import { TypeGenerator } from './TypeGenerator';
 import { typeGenerator } from './type-generator';
-import { OptionalFieldPattern, Options } from '../Options';
+import { OptionalFieldPattern, Options } from '../options';
 
 const objectGenerator: TypeGenerator = (schema: Schema, namedSchemas: Map<string, Schema>, references: Set<string>, options: Options): string | undefined => {
   if (!schema.type || schema.type !== 'object' || !schema.properties) {

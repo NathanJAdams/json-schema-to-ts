@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { Options } from '../Options';
+import { Options } from '../options';
 import { RootSchema, Schema, SchemaLocation } from '../schema';
 import { filteredJoin } from '../util';
 import { typeGenerator } from './type-generator';

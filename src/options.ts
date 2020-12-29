@@ -18,13 +18,11 @@ interface Options {
     source: {
       dir: string;
       encoding: BufferEncoding;
-      failOnEmpty: boolean;
       recursive: boolean;
     };
     destination: {
       dir: string;
       preClean: boolean;
-      overwrite: boolean;
     };
   };
   ts: {
@@ -38,12 +36,10 @@ const DEFAULT_OPTIONS: Options = {
     source: {
       dir: 'src/schemas',
       encoding: 'utf-8',
-      failOnEmpty: true,
       recursive: true
     },
     destination: {
       dir: 'src/generated',
-      overwrite: false,
       preClean: false
     }
   },

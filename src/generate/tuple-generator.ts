@@ -1,7 +1,7 @@
 import { Schema } from '../schema';
 import { TypeGenerator } from './TypeGenerator';
 import { typeGenerator } from './type-generator';
-import { Options } from '../Options';
+import { Options } from '../options';
 
 const tupleGenerator: TypeGenerator = (schema: Schema, namedSchemas: Map<string, Schema>, references: Set<string>, options: Options): string | undefined => {
   if (!schema.type || schema.type !== 'array' || !schema.items || !Array.isArray(schema.items)) {

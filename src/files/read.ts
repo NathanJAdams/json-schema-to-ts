@@ -1,24 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { Options } from '../Options';
-import { files, filesRecursive } from './walker';
-
-const readContent = (file: string, options: Options): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    fs.readFile(file, { encoding: options.files.source.encoding }, (err: NodeJS.ErrnoException | null, data: string): void => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(data);
-      }
-    });
-  });
-};
-
-const toRelativeFile = (absoluteDir: string, file: string): string => {
-  const relativeFileName: string = path.relative(absoluteDir, file);
-  return relativeFileName.substring(0, relativeFileName.indexOf('.'));
-};
+import { Options } from '../options';
+import { files, filesRecursive } from './walk';
 
 const read = (options: Options): Promise<Map<string, string>> => {
   return new Promise((resolve, reject) => {
@@ -39,6 +22,23 @@ const read = (options: Options): Promise<Map<string, string>> => {
       .then(() => resolve(filesContent))
       .catch(reject);
   });
+};
+
+const readContent = (file: string, options: Options): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(file, { encoding: options.files.source.encoding }, (err: NodeJS.ErrnoException | null, data: string): void => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+};
+
+const toRelativeFile = (absoluteDir: string, file: string): string => {
+  const relativeFileName: string = path.relative(absoluteDir, file);
+  return relativeFileName.substring(0, relativeFileName.indexOf('.'));
 };
 
 export {

@@ -1,7 +1,7 @@
 import { Schema } from '../schema';
 import { TypeGenerator } from './TypeGenerator';
 import { typeGenerator } from './type-generator';
-import { Options } from '../Options';
+import { Options } from '../options';
 import { filtered } from '../util';
 
 const oneOfGenerator: TypeGenerator = (schema: Schema, namedSchemas: Map<string, Schema>, references: Set<string>, options: Options): string | undefined => {
@@ -21,7 +21,7 @@ const oneOfGenerator: TypeGenerator = (schema: Schema, namedSchemas: Map<string,
   } else if (filteredLines.length > 8) {
     throw Error('Cannot currently create OneOf type for more than 8 types');
   } else {
-    const typeName: string = `OneOf_${filteredLines.length}`;
+    const typeName = `OneOf_${filteredLines.length}`;
     references.add(`json-schema-to-ts/${typeName}`);
     return `${typeName}<${filteredLines.join(', ')}>`;
   }

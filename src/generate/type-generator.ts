@@ -1,4 +1,4 @@
-import { Options } from '../Options';
+import { Options } from '../options';
 import { Schema } from '../schema';
 import { filtered } from '../util';
 import { allOfGenerator } from './all-of-generator';

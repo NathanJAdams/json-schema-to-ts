@@ -1,3 +1,3 @@
 export * from './main';
-export * from './Options';
+export * from './options';
 export * from './types/OneOf';

@@ -4,6 +4,22 @@ import * as path from 'path';
 const READ_OPTIONS: { withFileTypes: true; } = { withFileTypes: true };
 const flatten = (previous: string[], current: string[]) => previous.concat(current);
 
+const files = (dir: string): Promise<string[]> => {
+  return new Promise((resolve, reject) => {
+    fs.readdir(dir, READ_OPTIONS, (err: NodeJS.ErrnoException | null, files: fs.Dirent[]): void => {
+      if (err) {
+        reject(err);
+      } else if (!files || files.length === 0) {
+        resolve([]);
+      } else {
+        const resolveSubPath = (file: fs.Dirent) => path.resolve(dir, file.name);
+        const subFiles: string[] = files.filter((file: fs.Dirent) => file.isFile()).map(resolveSubPath);
+        resolve(subFiles);
+      }
+    });
+  });
+};
+
 const filesRecursive = (dir: string): Promise<string[]> => {
   return new Promise((resolve, reject) => {
     fs.readdir(dir, READ_OPTIONS, (err: NodeJS.ErrnoException | null, files: fs.Dirent[]): void => {
@@ -24,22 +40,6 @@ const filesRecursive = (dir: string): Promise<string[]> => {
             .then(resolve)
             .catch(reject);
         }
-      }
-    });
-  });
-};
-
-const files = (dir: string): Promise<string[]> => {
-  return new Promise((resolve, reject) => {
-    fs.readdir(dir, READ_OPTIONS, (err: NodeJS.ErrnoException | null, files: fs.Dirent[]): void => {
-      if (err) {
-        reject(err);
-      } else if (!files || files.length === 0) {
-        resolve([]);
-      } else {
-        const resolveSubPath = (file: fs.Dirent) => path.resolve(dir, file.name);
-        const subFiles: string[] = files.filter((file: fs.Dirent) => file.isFile()).map(resolveSubPath);
-        resolve(subFiles);
       }
     });
   });

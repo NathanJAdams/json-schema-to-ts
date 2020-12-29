@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { Options } from '../Options';
+import { Options } from '../options';
 import { RootSchema, SchemaLocation } from '../schema';
 import { fileGenerator } from './file-generator';
 
