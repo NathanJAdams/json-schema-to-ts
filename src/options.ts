@@ -26,6 +26,7 @@ interface Options {
     };
   };
   ts: {
+    idTypeNameExtractor: RegExp | string;
     optionalFields: OptionalFieldPattern;
     untyped: UntypedType;
   };
@@ -44,6 +45,7 @@ const DEFAULT_OPTIONS: Options = {
     }
   },
   ts: {
+    idTypeNameExtractor: /^http(?:s)?:\/\/[^/]+\/([^#]+)#\/(?:definitions\/)?(.*)$/,
     optionalFields: OptionalFieldPattern.QUESTION,
     untyped: UntypedType.UNKNOWN
   }

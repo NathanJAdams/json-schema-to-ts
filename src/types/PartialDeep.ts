@@ -1,5 +1,7 @@
 export type PartialDeep<T> = T extends Primitive
   ? Partial<T>
+  : T extends RegExp
+  ? T
   : T extends object
   ? PartialObjectDeep<T>
   : unknown;

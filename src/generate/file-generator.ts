@@ -15,7 +15,7 @@ const fileGenerator = (schemaLocation: SchemaLocation, rootSchema: RootSchema, o
 };
 
 const rootSchemaGenerator = (fileName: string, schema: Schema, namedSchemas: Map<string, Schema>, references: Set<string>, options: Options): string => {
-  const typeName: string = typeNameGenerator(fileName, schema.$id);
+  const typeName: string = typeNameGenerator(fileName, schema.$id, options);
   return schemaGenerator(typeName, schema, namedSchemas, references, options);
 };
 
@@ -45,7 +45,7 @@ const namedGenerator = (namedSchemas: Map<string, Schema>, references: Set<strin
   const content: (string | undefined)[] = [];
   const subNamedSchemas: Map<string, Schema> = new Map();
   namedSchemas.forEach((schema: Schema, name: string) => {
-    const typeName: string = typeNameGenerator(name, schema.$id);
+    const typeName: string = typeNameGenerator(name, schema.$id, options);
     const schemaContent: string = schemaGenerator(typeName, schema, subNamedSchemas, references, options);
     content.push(schemaContent);
   });
@@ -60,14 +60,30 @@ const definitionsGenerator = (definitions: Map<string, Schema> | undefined, name
   }
   const content: string[] = [];
   definitions.forEach((schema: Schema, name: string) => {
-    const typeName: string = typeNameGenerator(name, schema.$id);
+    const typeName: string = typeNameGenerator(name, schema.$id, options);
     const schemaContent: string = schemaGenerator(typeName, schema, namedSchemas, references, options);
     content.push(schemaContent);
   });
   return content.join('\n');
 };
 
-const typeNameGenerator = (name: string, id?: string): string => (id) ? id : name;
+const typeNameGenerator = (name: string, id: string | undefined, options: Options): string => {
+  if (!id) {
+    return name;
+  }
+  const matches: RegExpMatchArray | null = id.match(options.ts.idTypeNameExtractor);
+  if (!matches) {
+    return name;
+  }
+  const groups: string[] = matches.slice(1);
+  const rawTypeName: string = groups.join('');
+  const typeName: string = rawTypeName
+    .replace(/^[^a-zA-Z_]*/, '')
+    .replace(/[^a-zA-Z_0-9]/gi, '');
+  return (typeName.length === 0)
+    ? name
+    : typeName;
+};
 
 const tsPathGenerator = (relativePath: string): string => relativePath.startsWith('.') ? relativePath : '.' + path.sep + relativePath;
 
