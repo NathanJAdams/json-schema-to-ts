@@ -1,6 +1,17 @@
 {
   "name": "json-schema-to-ts",
   "version": "1.0.0",
+  "author": {
+    "name": "Nathan Adams",
+    "url": "https://github.com/NathanJAdams/json-schema-to-ts"
+  },
+  "keywords": [
+    "json",
+    "schema",
+    "json-schema",
+    "ts",
+    "typescript"
+  ],
   "scripts": {
     "build": "yarn lint && yarn tsc",
     "lint": "eslint . --fix",
