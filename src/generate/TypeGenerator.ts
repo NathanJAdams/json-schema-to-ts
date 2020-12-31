@@ -1,8 +1,10 @@
-import { Options } from '../options';
+import { FileLocation } from '../files';
+import { AllOptions } from '../options';
 import { Schema } from '../schema';
+import { References } from './References';
 
 interface TypeGenerator {
-  (schema: Schema, namedSchemas: Map<string, Schema>, references: Set<string>, options: Options): string | undefined;
+  (schema: Schema, namedSchemas: Map<string, Schema>, references: References, options: AllOptions, idFileLocations: Map<string, FileLocation>): string | undefined;
 }
 
 export {

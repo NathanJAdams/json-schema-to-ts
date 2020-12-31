@@ -1,14 +1,16 @@
+import { FileLocation } from '../files';
+import { AllOptions } from '../options';
 import { Schema } from '../schema';
+import { filteredJoin } from '../util';
+import { References } from './References';
 import { TypeGenerator } from './TypeGenerator';
 import { typeGenerator } from './type-generator';
-import { Options } from '../options';
-import { filteredJoin } from '../util';
 
-const collectionGenerator: TypeGenerator = (schema: Schema, namedSchemas: Map<string, Schema>, references: Set<string>, options: Options): string | undefined => {
+const collectionGenerator: TypeGenerator = (schema: Schema, namedSchemas: Map<string, Schema>, references: References, options: AllOptions, idFileLocations: Map<string, FileLocation>): string | undefined => {
   if (!schema.type || schema.type !== 'array' || !schema.items || Array.isArray(schema.items)) {
     return undefined;
   }
-  const inlinedElementType = typeGenerator(schema.items, namedSchemas, references, options);
+  const inlinedElementType = typeGenerator(schema.items, namedSchemas, references, options, idFileLocations);
   if (!inlinedElementType) {
     return undefined;
   }

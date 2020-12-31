@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 const READ_OPTIONS: { withFileTypes: true; } = { withFileTypes: true };
-const flatten = (previous: string[], current: string[]) => previous.concat(current);
+const flatten = <T>(previous: T[], current: T[]) => previous.concat(current);
 
 const files = (dir: string): Promise<string[]> => {
   return new Promise((resolve, reject) => {

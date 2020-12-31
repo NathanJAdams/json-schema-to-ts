@@ -1,88 +1,99 @@
 import * as path from 'path';
-import { Options } from '../options';
-import { RootSchema, Schema, SchemaLocation } from '../schema';
-import { filteredJoin } from '../util';
+import { FileLocation } from '../files';
+import { AllOptions } from '../options';
+import { RootSchema, Schema } from '../schema';
+import { filtered, filteredJoin } from '../util';
+import { ONE_OF, References } from './References';
 import { typeGenerator } from './type-generator';
+import { PACKAGE_NAME } from './util';
 
-const fileGenerator = (schemaLocation: SchemaLocation, rootSchema: RootSchema, options: Options): string => {
-  const references: Set<string> = new Set();
+const fileGenerator = (fileLocation: FileLocation, rootSchema: RootSchema, options: AllOptions, idFileLocations: Map<string, FileLocation>): string => {
+  const references: References = {
+    package: new Map(),
+    schema: new Map()
+  };
+  references.package.set(ONE_OF, new Set());
   const namedSchemas: Map<string, Schema> = new Map();
-  const schemaContent: string = rootSchemaGenerator(schemaLocation.file, rootSchema, namedSchemas, references, options);
-  const definitions: string | undefined = definitionsGenerator(rootSchema.definitions, namedSchemas, references, options);
-  const named: string | undefined = namedGenerator(namedSchemas, references, options);
-  const imports: string | undefined = importsGenerator(schemaLocation, references);
+  const schemaContent: string = rootSchemaGenerator(fileLocation.fileName, rootSchema, namedSchemas, references, options, idFileLocations);
+  const definitions: string | undefined = definitionsGenerator(rootSchema.definitions, namedSchemas, references, options, idFileLocations);
+  const named: string | undefined = namedGenerator(namedSchemas, references, options, idFileLocations);
+  const imports: string | undefined = importsGenerator(references);
   return filteredJoin([imports, schemaContent, named, definitions], '\n\n') + '\n';
 };
 
-const rootSchemaGenerator = (fileName: string, schema: Schema, namedSchemas: Map<string, Schema>, references: Set<string>, options: Options): string => {
-  const typeName: string = typeNameGenerator(fileName, schema.$id, options);
-  return schemaGenerator(typeName, schema, namedSchemas, references, options);
+const rootSchemaGenerator = (fileName: string, schema: Schema, namedSchemas: Map<string, Schema>, references: References, options: AllOptions, idFileLocations: Map<string, FileLocation>): string => {
+  const typeName: string = typeNameGenerator(fileName);
+  return schemaGenerator(typeName, schema, namedSchemas, references, options, idFileLocations);
 };
 
-const schemaGenerator = (typeName: string, schema: Schema, namedSchemas: Map<string, Schema>, references: Set<string>, options: Options): string => {
-  const typeContent: string = typeGenerator(schema, namedSchemas, references, options);
+const schemaGenerator = (typeName: string, schema: Schema, namedSchemas: Map<string, Schema>, references: References, options: AllOptions, idFileLocations: Map<string, FileLocation>): string => {
+  const typeContent: string = typeGenerator(schema, namedSchemas, references, options, idFileLocations);
   return `export type ${typeName} = ${typeContent};`;
 };
 
-const importsGenerator = (_schemaLocation: SchemaLocation, references: Set<string>): string | undefined => {
+const importsGenerator = (references: References): string | undefined => {
+  if (references.package.size === 0 && references.schema.size === 0) {
+    return undefined;
+  }
+  const content: (string | undefined)[] = [];
+  content.push(importMapGenerator(references.package));
+  content.push(importMapGenerator(references.schema));
+  const defined: string[] = filtered(content);
+  return defined.join('\n');
+};
+
+const importMapGenerator = (references: Map<FileLocation, Set<string>>): string | undefined => {
   if (references.size === 0) {
     return undefined;
   }
-  const content: string[] = [];
-  references.forEach((reference: string) => {
-    const name = path.basename(reference);
-    const relativePath: string = tsPathGenerator(path.relative(_schemaLocation.relativeDir, reference));
-    const normalisedPath: string = tsPathGenerator(path.normalize(relativePath));
-    content.push(`import { ${name} } from '${normalisedPath}';`);
+  const imports: string[] = [];
+  references.forEach((names: Set<string>, fileLocation: FileLocation) => {
+    if (names.size > 0) {
+      const combinedNames: string = Array.from(names).sort().join(', ');
+      const dir: string = fileLocation.dir;
+      const importPath: string = (dir === PACKAGE_NAME)
+        ? dir :
+        tsPathGenerator(path.normalize(path.relative(dir, fileLocation.dir)));
+      imports.push(`import { ${combinedNames} } from '${importPath}/${fileLocation.fileName}';`);
+    }
   });
-  return content.join('\n');
+  return imports.join('\n');
 };
 
-const namedGenerator = (namedSchemas: Map<string, Schema>, references: Set<string>, options: Options): string | undefined => {
+const namedGenerator = (namedSchemas: Map<string, Schema>, references: References, options: AllOptions, idFileLocations: Map<string, FileLocation>): string | undefined => {
   if (namedSchemas.size === 0) {
     return undefined;
   }
   const content: (string | undefined)[] = [];
   const subNamedSchemas: Map<string, Schema> = new Map();
   namedSchemas.forEach((schema: Schema, name: string) => {
-    const typeName: string = typeNameGenerator(name, schema.$id, options);
-    const schemaContent: string = schemaGenerator(typeName, schema, subNamedSchemas, references, options);
+    const typeName: string = typeNameGenerator(name);
+    const schemaContent: string = schemaGenerator(typeName, schema, subNamedSchemas, references, options, idFileLocations);
     content.push(schemaContent);
   });
-  const subContent = namedGenerator(subNamedSchemas, references, options);
+  const subContent = namedGenerator(subNamedSchemas, references, options, idFileLocations);
   content.push(subContent);
   return filteredJoin(content, '\n');
 };
 
-const definitionsGenerator = (definitions: Map<string, Schema> | undefined, namedSchemas: Map<string, Schema>, references: Set<string>, options: Options): string | undefined => {
+const definitionsGenerator = (definitions: Map<string, Schema> | undefined, namedSchemas: Map<string, Schema>, references: References, options: AllOptions, idFileLocations: Map<string, FileLocation>): string | undefined => {
   if (!definitions || definitions.size === 0) {
     return undefined;
   }
   const content: string[] = [];
   definitions.forEach((schema: Schema, name: string) => {
-    const typeName: string = typeNameGenerator(name, schema.$id, options);
-    const schemaContent: string = schemaGenerator(typeName, schema, namedSchemas, references, options);
+    const typeName: string = typeNameGenerator(name);
+    const schemaContent: string = schemaGenerator(typeName, schema, namedSchemas, references, options, idFileLocations);
     content.push(schemaContent);
   });
   return content.join('\n');
 };
 
-const typeNameGenerator = (name: string, id: string | undefined, options: Options): string => {
-  if (!id) {
-    return name;
-  }
-  const matches: RegExpMatchArray | null = id.match(options.ts.idTypeNameExtractor);
-  if (!matches) {
-    return name;
-  }
-  const groups: string[] = matches.slice(1);
-  const rawTypeName: string = groups.join('');
-  const typeName: string = rawTypeName
-    .replace(/^[^a-zA-Z_]*/, '')
-    .replace(/[^a-zA-Z_0-9]/gi, '');
-  return (typeName.length === 0)
-    ? name
-    : typeName;
+const typeNameGenerator = (fileName: string): string => {
+  const usableChars: string = fileName.replace(/[^a-zA-Z0-9_]/g, '');
+  return ((usableChars.length > 0) && usableChars.match(/^[a-zA-Z_]/))
+    ? usableChars
+    : '_' + usableChars;
 };
 
 const tsPathGenerator = (relativePath: string): string => relativePath.startsWith('.') ? relativePath : '.' + path.sep + relativePath;

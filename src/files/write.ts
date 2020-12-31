@@ -1,12 +1,15 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { Options } from '../options';
+import { AllOptions } from '../options';
+import { FileLocation } from './FileLocation';
 
-const write = (filesContent: Map<string, string>, options: Options): Promise<void> => {
+const write = (filesContent: Map<FileLocation, string>, options: AllOptions): Promise<void> => {
   const promises: Promise<void>[] = [];
   return new Promise<void>((resolve, reject) => {
-    filesContent.forEach((content: string, relativeFile: string) => {
-      const absoluteFile: string = path.resolve(options.files.cwd || process.cwd(), options.files.destination.dir, relativeFile) + '.ts';
+    const cwd: string = options.files.cwd || process.cwd();
+    const rootDir: string = path.resolve(cwd, options.files.destination.dir);
+    filesContent.forEach((content: string, fileLocation: FileLocation) => {
+      const absoluteFile: string = path.resolve(rootDir, fileLocation.dir, fileLocation.fileName) + '.ts';
       const promise: Promise<void> = writeContent(content, absoluteFile);
       promises.push(promise);
     });

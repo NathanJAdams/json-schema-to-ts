@@ -1,20 +1,15 @@
-import * as path from 'path';
-import { Options } from '../options';
-import { RootSchema, SchemaLocation } from '../schema';
+import { FileLocation } from '../files';
+import { AllOptions } from '../options';
+import { RootSchema } from '../schema';
 import { fileGenerator } from './file-generator';
+import { idLocations } from './id-locations';
 
-const generate = (fileContents: Map<string, RootSchema>, options: Options): Map<string, string> => {
-  const fileContent: Map<string, string> = new Map();
-  fileContents.forEach((rootSchema: RootSchema, relativeFile: string) => {
-    const lastSepIndex = relativeFile.lastIndexOf(path.sep);
-    const relativeDir: string = '.' + path.sep + relativeFile.substring(0, lastSepIndex);
-    const file: string = relativeFile.substring(lastSepIndex + 1);
-    const location: SchemaLocation = {
-      relativeDir,
-      file
-    };
-    const generated: string = fileGenerator(location, rootSchema, options);
-    fileContent.set(relativeFile, generated);
+const generate = (fileSchemas: Map<FileLocation, RootSchema>, options: AllOptions): Map<FileLocation, string> => {
+  const idFileLocations: Map<string, FileLocation> = idLocations(fileSchemas);
+  const fileContent: Map<FileLocation, string> = new Map();
+  fileSchemas.forEach((rootSchema: RootSchema, fileLocation: FileLocation) => {
+    const generated: string = fileGenerator(fileLocation, rootSchema, options, idFileLocations);
+    fileContent.set(fileLocation, generated);
   });
   return fileContent;
 };

@@ -2,11 +2,6 @@ type SchemaPrimitive = null | boolean | number | string;
 
 type SchemaEnum = Set<SchemaPrimitive>;
 
-interface SchemaLocation {
-  relativeDir: string;
-  file: string;
-}
-
 interface Schema {
   $id?: string;
   type?: string;
@@ -28,7 +23,6 @@ interface RootSchema extends Schema {
 export {
   SchemaPrimitive,
   SchemaEnum,
-  SchemaLocation,
   Schema,
   RootSchema
 };

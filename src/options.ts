@@ -12,7 +12,7 @@ enum OptionalFieldPattern {
   PIPE_UNDEFINED = 'Type | undefined'
 }
 
-interface Options {
+interface AllOptions {
   files: {
     cwd?: string;
     source: {
@@ -26,13 +26,14 @@ interface Options {
     };
   };
   ts: {
-    idTypeNameExtractor: RegExp | string;
     optionalFields: OptionalFieldPattern;
     untyped: UntypedType;
   };
 }
 
-const DEFAULT_OPTIONS: Options = {
+type Options = PartialDeep<AllOptions>;
+
+const DEFAULT_OPTIONS: AllOptions = {
   files: {
     source: {
       dir: 'src/schemas',
@@ -45,13 +46,12 @@ const DEFAULT_OPTIONS: Options = {
     }
   },
   ts: {
-    idTypeNameExtractor: /^http(?:s)?:\/\/[^/]+\/([^#]+)#\/(?:definitions\/)?(.*)$/,
     optionalFields: OptionalFieldPattern.QUESTION,
     untyped: UntypedType.UNKNOWN
   }
 };
 
-const createOptions = (options: PartialDeep<Options>): Options => {
+const createOptions = (options: PartialDeep<AllOptions>): AllOptions => {
   return {
     files: {
       ...DEFAULT_OPTIONS.files,
@@ -74,6 +74,7 @@ const createOptions = (options: PartialDeep<Options>): Options => {
 
 export {
   OptionalFieldPattern,
+  AllOptions,
   Options,
   DEFAULT_OPTIONS,
   createOptions

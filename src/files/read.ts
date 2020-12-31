@@ -1,9 +1,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { Options } from '../options';
+import { AllOptions } from '../options';
+import { FileLocation } from './FileLocation';
 import { files, filesRecursive } from './walk';
 
-const read = (options: Options): Promise<Map<string, string>> => {
+const read = (options: AllOptions): Promise<Map<FileLocation, string>> => {
   return new Promise((resolve, reject) => {
     const sourceDir = options.files.source.dir;
     const absoluteDir: string = (path.isAbsolute(sourceDir))
@@ -12,9 +13,9 @@ const read = (options: Options): Promise<Map<string, string>> => {
     const filesPromise: Promise<string[]> = (options.files.source.recursive)
       ? filesRecursive(absoluteDir)
       : files(absoluteDir);
-    const filesContent: Map<string, string> = new Map();
+    const filesContent: Map<FileLocation, string> = new Map();
     const addContentPromise: (file: string) => Promise<void> = (file: string) => readContent(file, options)
-      .then((content: string) => { filesContent.set(toRelativeFile(absoluteDir, file), content); })
+      .then((content: string) => { filesContent.set(toRelativeFileLocation(absoluteDir, file), content); })
       .catch(reject);
     filesPromise
       .then((files: string[]) => files.map(addContentPromise))
@@ -24,7 +25,7 @@ const read = (options: Options): Promise<Map<string, string>> => {
   });
 };
 
-const readContent = (file: string, options: Options): Promise<string> => {
+const readContent = (file: string, options: AllOptions): Promise<string> => {
   return new Promise((resolve, reject) => {
     fs.readFile(file, { encoding: options.files.source.encoding }, (err: NodeJS.ErrnoException | null, data: string): void => {
       if (err) {
@@ -36,9 +37,15 @@ const readContent = (file: string, options: Options): Promise<string> => {
   });
 };
 
-const toRelativeFile = (absoluteDir: string, file: string): string => {
-  const relativeFileName: string = path.relative(absoluteDir, file);
-  return relativeFileName.substring(0, relativeFileName.indexOf('.'));
+const toRelativeFileLocation = (absoluteDir: string, file: string): FileLocation => {
+  const absoluteFileDir: string = path.dirname(file);
+  const dir: string = '.' + path.sep + path.relative(absoluteDir, absoluteFileDir);
+  const fileNameWithExt: string = path.basename(file);
+  const fileName: string = fileNameWithExt.substring(0, fileNameWithExt.indexOf('.'));
+  return {
+    dir,
+    fileName
+  };
 };
 
 export {

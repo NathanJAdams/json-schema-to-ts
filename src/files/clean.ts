@@ -1,8 +1,8 @@
 import * as path from 'path';
 import rimraf from 'rimraf';
-import { Options } from '../options';
+import { AllOptions } from '../options';
 
-const clean = (options: Options): Promise<void> => {
+const clean = (options: AllOptions): Promise<void> => {
   return new Promise((resolve, reject) => {
     if (!options.files.destination.preClean) {
       resolve();
