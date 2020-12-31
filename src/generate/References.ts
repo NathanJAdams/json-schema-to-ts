@@ -3,7 +3,7 @@ import { PACKAGE_NAME } from './util';
 
 const ONE_OF: FileLocation = {
   dir: PACKAGE_NAME,
-  fileName: 'OneOf'
+  fileName: ''
 };
 
 interface References {
