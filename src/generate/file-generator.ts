@@ -54,7 +54,10 @@ const importMapGenerator = (references: Map<FileLocation, Set<string>>): string 
       const importPath: string = (dir === PACKAGE_NAME)
         ? dir :
         tsPathGenerator(path.normalize(path.relative(dir, fileLocation.dir)));
-      imports.push(`import { ${combinedNames} } from '${importPath}/${fileLocation.fileName}';`);
+      const file: string = (fileLocation.fileName.length === 0)
+        ? ''
+        : `/${fileLocation.fileName}`;
+      imports.push(`import { ${combinedNames} } from '${importPath}${file}';`);
     }
   });
   return imports.join('\n');
