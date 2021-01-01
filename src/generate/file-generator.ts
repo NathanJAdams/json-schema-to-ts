@@ -54,7 +54,7 @@ const importMapGenerator = (fileLocation: FileLocation, references: Map<FileLoca
       const importPath: string = (dir === PACKAGE_NAME)
         ? dir :
         tsPathGenerator(path.normalize(path.relative(fileLocation.dir, dir)));
-      const file: string = (fileLocation.fileName.length === 0)
+      const file: string = (referenceFileLocation.fileName.length === 0)
         ? ''
         : `/${referenceFileLocation.fileName}`;
       imports.push(`import { ${combinedNames} } from '${importPath}${file}';`);
