@@ -12,7 +12,7 @@ const main = (options: Options): Promise<void> => {
     .then(() => read(allOptions))
     .then((fileContents) => parse(fileContents))
     .then((fileSchemas) => generate(fileSchemas, allOptions))
-    // // TODO check no extant files or can overwrite
+    // TODO check no extant files or can overwrite
     .then((filesContent) => write(filesContent, allOptions))
     .catch(console.error);
 };

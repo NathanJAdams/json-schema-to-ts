@@ -17,7 +17,7 @@ const fileGenerator = (fileLocation: FileLocation, rootSchema: RootSchema, optio
   const schemaContent: string = rootSchemaGenerator(fileLocation.fileName, rootSchema, namedSchemas, references, options, idFileLocations);
   const definitions: string | undefined = definitionsGenerator(rootSchema.definitions, namedSchemas, references, options, idFileLocations);
   const named: string | undefined = namedGenerator(namedSchemas, references, options, idFileLocations);
-  const imports: string | undefined = importsGenerator(references);
+  const imports: string | undefined = importsGenerator(fileLocation, references);
   return filteredJoin([imports, schemaContent, named, definitions], '\n\n') + '\n';
 };
 
@@ -31,32 +31,32 @@ const schemaGenerator = (typeName: string, schema: Schema, namedSchemas: Map<str
   return `export type ${typeName} = ${typeContent};`;
 };
 
-const importsGenerator = (references: References): string | undefined => {
+const importsGenerator = (fileLocation: FileLocation, references: References): string | undefined => {
   if (references.package.size === 0 && references.schema.size === 0) {
     return undefined;
   }
   const content: (string | undefined)[] = [];
-  content.push(importMapGenerator(references.package));
-  content.push(importMapGenerator(references.schema));
+  content.push(importMapGenerator(fileLocation, references.package));
+  content.push(importMapGenerator(fileLocation, references.schema));
   const defined: string[] = filtered(content);
   return defined.join('\n');
 };
 
-const importMapGenerator = (references: Map<FileLocation, Set<string>>): string | undefined => {
+const importMapGenerator = (fileLocation: FileLocation, references: Map<FileLocation, Set<string>>): string | undefined => {
   if (references.size === 0) {
     return undefined;
   }
   const imports: string[] = [];
-  references.forEach((names: Set<string>, fileLocation: FileLocation) => {
+  references.forEach((names: Set<string>, referenceFileLocation: FileLocation) => {
     if (names.size > 0) {
       const combinedNames: string = Array.from(names).sort().join(', ');
-      const dir: string = fileLocation.dir;
+      const dir: string = referenceFileLocation.dir;
       const importPath: string = (dir === PACKAGE_NAME)
         ? dir :
-        tsPathGenerator(path.normalize(path.relative(dir, fileLocation.dir)));
+        tsPathGenerator(path.normalize(path.relative(fileLocation.dir, dir)));
       const file: string = (fileLocation.fileName.length === 0)
         ? ''
-        : `/${fileLocation.fileName}`;
+        : `/${referenceFileLocation.fileName}`;
       imports.push(`import { ${combinedNames} } from '${importPath}${file}';`);
     }
   });

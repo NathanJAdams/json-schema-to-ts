@@ -15,7 +15,7 @@ const read = (options: AllOptions): Promise<Map<FileLocation, string>> => {
       : files(absoluteDir);
     const filesContent: Map<FileLocation, string> = new Map();
     const addContentPromise: (file: string) => Promise<void> = (file: string) => readContent(file, options)
-      .then((content: string) => { filesContent.set(toRelativeFileLocation(absoluteDir, file), content); })
+      .then((content: string) => { filesContent.set(toFileLocation(file), content); })
       .catch(reject);
     filesPromise
       .then((files: string[]) => files.map(addContentPromise))
@@ -37,9 +37,8 @@ const readContent = (file: string, options: AllOptions): Promise<string> => {
   });
 };
 
-const toRelativeFileLocation = (absoluteDir: string, file: string): FileLocation => {
-  const absoluteFileDir: string = path.dirname(file);
-  const dir: string = '.' + path.sep + path.relative(absoluteDir, absoluteFileDir);
+const toFileLocation = (file: string): FileLocation => {
+  const dir: string = path.dirname(file);
   const fileNameWithExt: string = path.basename(file);
   const fileName: string = fileNameWithExt.substring(0, fileNameWithExt.indexOf('.'));
   return {

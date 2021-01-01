@@ -7,9 +7,11 @@ const write = (filesContent: Map<FileLocation, string>, options: AllOptions): Pr
   const promises: Promise<void>[] = [];
   return new Promise<void>((resolve, reject) => {
     const cwd: string = options.files.cwd || process.cwd();
-    const rootDir: string = path.resolve(cwd, options.files.destination.dir);
+    const rootSourceDir: string = path.resolve(cwd, options.files.source.dir);
+    const rootDestinationDir: string = path.resolve(cwd, options.files.destination.dir);
     filesContent.forEach((content: string, fileLocation: FileLocation) => {
-      const absoluteFile: string = path.resolve(rootDir, fileLocation.dir, fileLocation.fileName) + '.ts';
+      const relativeDir: string = path.relative(rootSourceDir, fileLocation.dir);
+      const absoluteFile: string = path.resolve(rootDestinationDir, relativeDir, fileLocation.fileName) + '.ts';
       const promise: Promise<void> = writeContent(content, absoluteFile);
       promises.push(promise);
     });
