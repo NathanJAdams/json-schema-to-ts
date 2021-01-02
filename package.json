@@ -22,7 +22,7 @@
     "build": "yarn lint && yarn tsc",
     "lint": "eslint . --fix",
     "tsc": "rimraf ./dist && tsc",
-    "publish": "yarn lint && yarn tsc && yarn build && npm publish"
+    "publish": "yarn build && npm publish"
   },
   "dependencies": {
     "rimraf": "3.0.2"
