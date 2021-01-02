@@ -1,18 +1,36 @@
 # json-schema-typescript-generator
 A utility to generate typescript files from json schema files
 
+## Contents
+[Install](#Install)
+
+[Usage](#Usage)
+
+[Typescript](#Typescript)
+
+[Approach](#Approach)
+
+[Issues](#Issues)
+
+
 ## Install
 Install via one of the commands
 
     npm -i json-schema-typescript-generator -D
     yarn add json-schema-typescript-generator -D
 
+
 ## Usage
-To generate .ts files, first import the `main` function like this
+To generate .ts files, import the `main` function and `Options` interface like this
 
-    import { main } from 'json-schema-typescript-generator';
+    import { main, Options } from 'json-schema-typescript-generator';
 
-The behavior of the utility is defined by an [Options.ts](src/Options.ts) object
+Then create an Options object and invoke the main function with it like this
+
+    const options: Options = {...}
+    main(options);
+
+The [Options.ts](src/Options.ts) object is defined as follows:
 
     {
       files: {
@@ -68,7 +86,7 @@ The option
 defines whether the destination folder will be deleted before generating typescript files
 
 
-## Typescript options
+## Typescript
 
 There are 2 options which define the style of code generated
 
@@ -131,3 +149,55 @@ or
     type Example = {
       a: unknown
     }
+
+
+## Approach
+
+The approach this utility takes is to only do one thing but do it well. It doesn't do any validation, consistency checking, linting, prettifying etc. It assumes the schema author knows exactly what they want and will generate typescript files that represent the schemas given as closely as possible, even if the generated types don't make sense or cannot be satisfied.
+
+An example will make this clear:
+
+Given the following schema in a file called `A.json`
+
+    {
+      "type": "number",
+      "$ref": "#/definitions/BOOL",
+      "enum": [
+        null,
+        "tuv",
+        "xyz"
+      ],
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/definitions/BOOL"
+        }
+      ],
+      "definitions": {
+        "BOOL": {
+          "type": "boolean"
+        }
+      }
+    }
+
+Invoking the generator will generate a file `A.ts` containing:
+
+    import { OneOf_2 } from 'json-schema-typescript-generator';
+
+    export type A = number
+    & BOOL
+    & (null | 'tuv' | 'xyz')
+    & OneOf_2<string, BOOL>;
+
+    export type BOOL = boolean;
+
+
+Clearly type `A` cannot ever be satisfied, but it does match what the schema specified
+
+
+## Issues
+
+### OneOf
+The utility currently only supports up to and including 8 schemas inside a `oneOf` array. This should be plenty for most use cases, however this will be an issue for some users. Support for an arbitrary number is on the [TODO](TODO.md) list and will be coming soon.
