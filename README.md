@@ -200,4 +200,77 @@ Clearly type `A` cannot ever be satisfied, but it does match what the schema spe
 ## Issues
 
 ### OneOf
-The utility currently only supports up to and including 8 schemas inside a `oneOf` array. This should be plenty for most use cases, however this may be an issue for some users. Support for an arbitrary number is on the [TODO](TODO.md) list and will be coming soon.
+This utility currently only supports up to and including 8 schemas inside a `oneOf` array. This should be plenty for most use cases, however this may be an issue for some users. Support for an arbitrary number is on the [TODO](TODO.md) list and will be coming soon.
+In the meantime, a workaround is to split up the `oneOf` array into smaller `oneOf` arrays defined in a `definitions` section and compose them into a master `oneOf` array.
+
+An example follows where a `oneOf` array of 9 elements is needed which the generator will fail to generate:
+
+    {
+      "oneOf": [
+        {
+          "$ref": "#/definitions/A1"
+        },
+        {
+          "$ref": "#/definitions/A2"
+        },
+        {
+          "$ref": "#/definitions/A3"
+        },
+        {
+          "$ref": "#/definitions/B1"
+        },
+        {
+          "$ref": "#/definitions/B2"
+        },
+        {
+          "$ref": "#/definitions/B3"
+        },
+        {
+          "$ref": "#/definitions/C1"
+        },
+        {
+          "$ref": "#/definitions/C2"
+        },
+        {
+          "$ref": "#/definitions/C3"
+        }
+      ],
+      "definitions": {...}
+    }
+
+The schema could be split up and composed as follows, allowing the generator to generate the typescript files as normal:
+
+    {
+      "oneOf": [
+        {
+          "$ref": "#/definitions/Part_A"
+        },
+        {
+          "$ref": "#/definitions/Part_B"
+        },
+        {
+          "$ref": "#/definitions/Part_C"
+        }
+      ],
+      "definitions": {
+        "Part_A": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/A1"
+            },
+            {
+              "$ref": "#/definitions/A2"
+            },
+            {
+              "$ref": "#/definitions/A3"
+            }
+          ]
+        },
+        "Part_B": {
+          "oneOf": [...]
+        },
+        "Part_C":  {
+          "oneOf": [...]
+        }
+      }
+    }
