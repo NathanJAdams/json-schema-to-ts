@@ -21,8 +21,7 @@
   "scripts": {
     "build": "yarn lint && yarn tsc",
     "lint": "eslint . --fix",
-    "tsc": "rimraf ./dist && tsc",
-    "publish": "yarn build && npm publish"
+    "tsc": "rimraf ./dist && tsc"
   },
   "dependencies": {
     "rimraf": "3.0.2"
