@@ -179,7 +179,7 @@ Support for properties defined in the JSON Schema are as follows:
 
 ## Approach
 
-The approach this utility takes is to only do one thing but do it well. It doesn't do any validation, consistency checking, linting, prettifying etc. It assumes the schema author knows exactly what they want and will generate typescript files that represent the schemas given as closely as possible, even if the generated types don't make sense or cannot be satisfied.
+The approach this utility takes is to only do one thing but do it well. It doesn't do any validation, consistency checking, linting, prettifying etc. It assumes the schema author knows exactly what they want and it will generate typescript files that represent the schemas given as closely as possible, even if the generated types don't make sense or cannot be satisfied.
 
 An example will make this clear:
 
@@ -293,10 +293,11 @@ The schema could be split up and composed as follows, allowing the generator to 
           ]
         },
         "Part_B": {
-          "oneOf": [...]
+          "oneOf": [same as Part_A but for B1, B2, B3]
         },
         "Part_C":  {
-          "oneOf": [...]
-        }
+          "oneOf": [same as Part_A but for C1, C2, C3]
+        },
+        ...other definitions as before
       }
     }
