@@ -1,18 +1,21 @@
-import { FileLocation } from '../files';
-import { AllOptions } from '../options';
 import { Schema } from '../schema';
 import { filtered } from '../util';
-import { ONE_OF, References } from './References';
-import { TypeGenerator } from './TypeGenerator';
+import { ONE_OF } from './References';
+import { LocatedSchema, SchemaGatheredInfo, SchemaInputInfo, TypeGenerator } from './TypeGenerator';
 import { typeGenerator } from './type-generator';
 
-const oneOfGenerator: TypeGenerator = (schema: Schema, namedSchemas: Map<string, Schema>, references: References, options: AllOptions, idFileLocations: Map<string, FileLocation>): string | undefined => {
+const oneOfGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
+  const schema: Schema = locatedSchema.schema;
   if (!schema.oneOf || schema.oneOf.length === 0) {
     return undefined;
   }
   const lines: (string | undefined)[] = [];
   schema.oneOf.forEach((elementSchema: Schema) => {
-    const elementContent: string | undefined = typeGenerator(elementSchema, namedSchemas, references, options, idFileLocations);
+    const elementLocatedSchema: LocatedSchema = {
+      fileLocation: locatedSchema.fileLocation,
+      schema: elementSchema
+    };
+    const elementContent: string | undefined = typeGenerator(elementLocatedSchema, gatheredInfo, inputInfo);
     lines.push(elementContent);
   });
   const filteredLines: string[] = filtered(lines);
@@ -24,7 +27,7 @@ const oneOfGenerator: TypeGenerator = (schema: Schema, namedSchemas: Map<string,
     throw Error('Cannot currently create OneOf type for more than 8 types');
   } else {
     const typeName = `OneOf_${filteredLines.length}`;
-    references.package.get(ONE_OF)?.add(typeName);
+    gatheredInfo.references.package.get(ONE_OF)?.add(typeName);
     const combinedTypeNames: string = filteredLines.join(', ');
     return `${typeName}<${combinedTypeNames}>`;
   }

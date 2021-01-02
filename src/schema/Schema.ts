@@ -14,15 +14,11 @@ interface Schema {
   oneOf?: Schema[];
   properties?: Map<string, Schema>;
   required?: Set<string>;
-}
-
-interface RootSchema extends Schema {
   definitions?: Map<string, Schema>;
 }
 
 export {
   SchemaPrimitive,
   SchemaEnum,
-  Schema,
-  RootSchema
+  Schema
 };

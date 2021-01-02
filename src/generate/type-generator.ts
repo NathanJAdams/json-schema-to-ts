@@ -1,6 +1,3 @@
-import { FileLocation } from '../files';
-import { AllOptions } from '../options';
-import { Schema } from '../schema';
 import { filtered } from '../util';
 import { allOfGenerator } from './all-of-generator';
 import { anyOfGenerator } from './any-of-generator';
@@ -10,23 +7,23 @@ import { objectGenerator } from './object-generator';
 import { oneOfGenerator } from './one-of-generator';
 import { primitiveGenerator } from './primitive-generator';
 import { referenceGenerator } from './reference-generator';
-import { References } from './References';
 import { tupleGenerator } from './tuple-generator';
+import { LocatedSchema, SchemaGatheredInfo, SchemaInputInfo, TypeGenerator } from './TypeGenerator';
 
-const typeGenerator = (schema: Schema, namedSchemas: Map<string, Schema>, references: References, options: AllOptions, idFileLocations: Map<string, FileLocation>): string => {
+const typeGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
   const types: (string | undefined)[] = [];
-  types.push(primitiveGenerator(schema, namedSchemas, references, options, idFileLocations));
-  types.push(referenceGenerator(schema, namedSchemas, references, options, idFileLocations));
-  types.push(enumGenerator(schema, namedSchemas, references, options, idFileLocations));
-  types.push(collectionGenerator(schema, namedSchemas, references, options, idFileLocations));
-  types.push(tupleGenerator(schema, namedSchemas, references, options, idFileLocations));
-  types.push(objectGenerator(schema, namedSchemas, references, options, idFileLocations));
-  types.push(allOfGenerator(schema, namedSchemas, references, options, idFileLocations));
-  types.push(anyOfGenerator(schema, namedSchemas, references, options, idFileLocations));
-  types.push(oneOfGenerator(schema, namedSchemas, references, options, idFileLocations));
+  types.push(primitiveGenerator(locatedSchema, gatheredInfo, inputInfo));
+  types.push(referenceGenerator(locatedSchema, gatheredInfo, inputInfo));
+  types.push(enumGenerator(locatedSchema, gatheredInfo, inputInfo));
+  types.push(collectionGenerator(locatedSchema, gatheredInfo, inputInfo));
+  types.push(tupleGenerator(locatedSchema, gatheredInfo, inputInfo));
+  types.push(objectGenerator(locatedSchema, gatheredInfo, inputInfo));
+  types.push(allOfGenerator(locatedSchema, gatheredInfo, inputInfo));
+  types.push(anyOfGenerator(locatedSchema, gatheredInfo, inputInfo));
+  types.push(oneOfGenerator(locatedSchema, gatheredInfo, inputInfo));
   const filteredLines: string[] = filtered(types);
   if (filteredLines.length === 0) {
-    return options.ts.untyped;
+    return inputInfo.options.ts.untyped;
   }
   return filteredLines.join('\n& ');
 };

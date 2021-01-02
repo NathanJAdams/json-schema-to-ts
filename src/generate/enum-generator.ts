@@ -1,7 +1,8 @@
 import { Schema, SchemaPrimitive } from '../schema';
-import { TypeGenerator } from './TypeGenerator';
+import { LocatedSchema, TypeGenerator } from './TypeGenerator';
 
-const enumGenerator: TypeGenerator = (schema: Schema): string | undefined => {
+const enumGenerator: TypeGenerator = (locatedSchema: LocatedSchema): string | undefined => {
+  const schema: Schema = locatedSchema.schema;
   if (!schema.enum || schema.enum.size === 0) {
     return undefined;
   }

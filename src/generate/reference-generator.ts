@@ -1,10 +1,10 @@
 import { FileLocation } from '../files';
-import { Options } from '../options';
 import { Schema } from '../schema';
 import { References } from './References';
-import { TypeGenerator } from './TypeGenerator';
+import { LocatedSchema, SchemaGatheredInfo, SchemaInputInfo, TypeGenerator } from './TypeGenerator';
 
-const referenceGenerator: TypeGenerator = (schema: Schema, _namedSchemas: Map<string, Schema>, references: References, _options: Options, idFileLocations: Map<string, FileLocation>): string | undefined => {
+const referenceGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
+  const schema: Schema = locatedSchema.schema;
   const ref: string | undefined = schema.$ref;
   if (!ref) {
     return undefined;
@@ -13,11 +13,11 @@ const referenceGenerator: TypeGenerator = (schema: Schema, _namedSchemas: Map<st
   if (localRef) {
     return localRef;
   }
-  const fullRef: string | undefined = createFullRef(ref, references, idFileLocations);
+  const fullRef: string | undefined = createFullRef(ref, gatheredInfo, inputInfo);
   if (fullRef) {
     return fullRef;
   }
-  const relativeRef: string | undefined = createRelativeRef(schema.$id, ref, references, idFileLocations);
+  const relativeRef: string | undefined = createRelativeRef(locatedSchema.fileLocation, ref, gatheredInfo, inputInfo);
   if (relativeRef) {
     return relativeRef;
   }
@@ -32,20 +32,20 @@ const createLocalRef = (ref: string): string | undefined => {
   return refNameMatch[1];
 };
 
-const createFullRef = (ref: string, references: References, idFileLocations: Map<string, FileLocation>): string | undefined => {
+const createFullRef = (ref: string, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
   // root
-  const fileLocation: FileLocation | undefined = idFileLocations.get(ref);
+  const fileLocation: FileLocation | undefined = inputInfo.idFileLocations.get(ref);
   if (fileLocation) {
-    addExternalReference(references, fileLocation);
+    addExternalReference(gatheredInfo.references, fileLocation);
     return fileLocation.fileName;
   }
   // inner
-  for (const [id, idFileLocation] of Array.from(idFileLocations)) {
+  for (const [id, idFileLocation] of Array.from(inputInfo.idFileLocations)) {
     if (ref.startsWith(id)) {
       const rest: string = ref.substring(id.length);
       const innerRef: string | undefined = createLocalRef(rest);
       if (innerRef) {
-        addExternalReference(references, idFileLocation, innerRef);
+        addExternalReference(gatheredInfo.references, idFileLocation, innerRef);
       }
       return innerRef;
     }
@@ -53,27 +53,20 @@ const createFullRef = (ref: string, references: References, idFileLocations: Map
   return undefined;
 };
 
-const createRelativeRef = (id: string | undefined, ref: string, references: References, idFileLocations: Map<string, FileLocation>): string | undefined => {
-  if (!id) {
-    return undefined;
-  }
-  const fileLocation: FileLocation | undefined = idFileLocations.get(id);
-  if (!fileLocation) {
-    return undefined;
-  }
-  for (const idFileLocation of Array.from(idFileLocations.values())) {
+const createRelativeRef = (fileLocation: FileLocation, ref: string, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
+  for (const idFileLocation of Array.from(inputInfo.idFileLocations.values())) {
     if (fileLocation.dir === idFileLocation.dir) {
       if (ref.startsWith(idFileLocation.fileName)) {
         const rest: string = ref.substring(idFileLocation.fileName.length);
         // root
         if (rest === '' || rest === '#') {
-          addExternalReference(references, idFileLocation);
+          addExternalReference(gatheredInfo.references, idFileLocation);
           return idFileLocation.fileName;
         }
         // inner
         const innerRef: string | undefined = createLocalRef(rest);
         if (innerRef) {
-          addExternalReference(references, idFileLocation, innerRef);
+          addExternalReference(gatheredInfo.references, idFileLocation, innerRef);
           return innerRef;
         }
       }

@@ -12,13 +12,9 @@ interface RawSchema {
   oneOf?: RawSchema[];
   properties?: Record<string, RawSchema>;
   required?: string[];
-}
-
-interface RawRootSchema extends RawSchema {
   definitions?: Record<string, RawSchema>;
 }
 
 export {
-  RawSchema,
-  RawRootSchema
+  RawSchema
 };
