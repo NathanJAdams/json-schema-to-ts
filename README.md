@@ -30,7 +30,7 @@ Then create an Options object and invoke the main function with it like this
     const options: Options = {...}
     main(options);
 
-The [Options.ts](src/Options.ts) object is defined as follows:
+The [Options](src/options.ts) object is defined as follows:
 
     {
       files: {
