@@ -200,4 +200,4 @@ Clearly type `A` cannot ever be satisfied, but it does match what the schema spe
 ## Issues
 
 ### OneOf
-The utility currently only supports up to and including 8 schemas inside a `oneOf` array. This should be plenty for most use cases, however this will be an issue for some users. Support for an arbitrary number is on the [TODO](TODO.md) list and will be coming soon.
+The utility currently only supports up to and including 8 schemas inside a `oneOf` array. This should be plenty for most use cases, however this may be an issue for some users. Support for an arbitrary number is on the [TODO](TODO.md) list and will be coming soon.
