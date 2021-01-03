@@ -38,7 +38,7 @@ const createIndexFiles = (folderFiles: Map<string, Set<string>>): Promise<void> 
     Array.from(folderFiles.entries()).forEach(([folder, files]) => {
       const indexFileName = `${folder}/index.ts`;
       const contentLines: string[] = [];
-      files.forEach((file) => {
+      Array.from(files).sort().forEach((file) => {
         const line = `export * from './${file}';`;
         contentLines.push(line);
       });
