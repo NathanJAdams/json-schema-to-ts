@@ -10,6 +10,8 @@
     "url": "https://github.com/NathanJAdams/json-schema-to-ts"
   },
   "keywords": [
+    "generate",
+    "file",
     "json",
     "schema",
     "json-schema",
