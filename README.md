@@ -12,8 +12,6 @@ Generate typescript files from json schema files
 
 [Approach](#Approach)
 
-[Issues](#Issues)
-
 
 ## Install
 Install via one of the commands
@@ -168,7 +166,7 @@ Support for properties defined in the JSON Schema are as follows:
 | array properties | ✔ | items<br>uniqueItems<br>additionalItems<br><br>`T[]` - Array if `items` is a schema and `uniqueItems=false`<br>`Set<T>` - Set if `items` is a schema and `uniqueItems=true`<br>`[T, U, V]` - Tuple if `items` is an array
 | array properties | ✘ | contains<br>minItems<br>maxItems<br><br>array (and possibly tuple) min length: `type MinLengthArray<T> = [T, T, ...T[]];` Although no typescript support for a `Set<T>` of specific size<br>No typescript support for contains
 | object properties | ✔ | properties<br>additionalProperties
-| combinations | ✔ | allOf<br>anyOf<br>oneOf<br><br>oneOf is supported for 90% of use cases with a workaround for unsupported cases - see the [Issues](#Issues) section for details. An action is in the [TODO](TODO.md) to support an arbitrary number of schemas in a oneOf array
+| combinations | ✔ | allOf<br>anyOf<br>oneOf<br><br>If oneOf is used, dynamic OneOf_n types are generated in files that need them, these can get large and will be updated if typescript adds native support
 
 ## Approach
 
@@ -214,83 +212,3 @@ Invoking the generator will generate a file `A.ts` containing:
 
 
 Clearly type `A` cannot ever be satisfied, but it does match what the schema specified
-
-
-## Issues
-
-### OneOf
-This utility currently only supports up to and including 8 schemas inside a `oneOf` array. This should be plenty for most use cases, however this may be an issue for some users. Support for an arbitrary number is on the [TODO](TODO.md) list and will be coming soon.
-In the meantime, a workaround is to split up the `oneOf` array into smaller `oneOf` arrays defined in a `definitions` section and compose them into a master `oneOf` array.
-
-An example follows where a `oneOf` array of 9 elements is needed which the generator will fail to generate:
-
-    {
-      "oneOf": [
-        {
-          "$ref": "#/definitions/A1"
-        },
-        {
-          "$ref": "#/definitions/A2"
-        },
-        {
-          "$ref": "#/definitions/A3"
-        },
-        {
-          "$ref": "#/definitions/B1"
-        },
-        {
-          "$ref": "#/definitions/B2"
-        },
-        {
-          "$ref": "#/definitions/B3"
-        },
-        {
-          "$ref": "#/definitions/C1"
-        },
-        {
-          "$ref": "#/definitions/C2"
-        },
-        {
-          "$ref": "#/definitions/C3"
-        }
-      ],
-      "definitions": {...}
-    }
-
-The schema could be split up and composed as follows, allowing the generator to generate the typescript files as normal:
-
-    {
-      "oneOf": [
-        {
-          "$ref": "#/definitions/Part_A"
-        },
-        {
-          "$ref": "#/definitions/Part_B"
-        },
-        {
-          "$ref": "#/definitions/Part_C"
-        }
-      ],
-      "definitions": {
-        "Part_A": {
-          "oneOf": [
-            {
-              "$ref": "#/definitions/A1"
-            },
-            {
-              "$ref": "#/definitions/A2"
-            },
-            {
-              "$ref": "#/definitions/A3"
-            }
-          ]
-        },
-        "Part_B": {
-          "oneOf": [same as Part_A but for B1, B2, B3]
-        },
-        "Part_C":  {
-          "oneOf": [same as Part_A but for C1, C2, C3]
-        },
-        ...other definitions as before
-      }
-    }
