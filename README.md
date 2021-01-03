@@ -160,22 +160,15 @@ Support for properties defined in the JSON Schema are as follows:
 |---------|-----|------
 | $id     | ✔
 | $schema | ✘ | Action in TODO to support specific schema versions
-| 
 | $ref | ✔ | local definition<br>absolute root/inner<br>relative root/inner
-|
 | enum | ✔ | null<br>booleans<br>numbers<br>strings
-|
 | type | ✔ | null<br>boolean<br>integer<br>number<br>string<br>array<br>object
-| number properties | ✘ | multipleOf<br>minimum<br>maximum<br>exclusiveMinimum<br>exclusiveMaximum<br><br>No typescript support for multipleOf<br>[Open question on GitHub about number ranges](https://github.com/Microsoft/TypeScript/issues/15480)
+| number properties | ✘ | multipleOf<br>minimum<br>maximum<br>exclusiveMinimum<br>exclusiveMaximum<br><br>No typescript support for `multipleOf`<br>[Open question on GitHub about number ranges](https://github.com/Microsoft/TypeScript/issues/15480)
 | string properties | ✘ | minLength<br>maxLength<br>pattern<br>format<br><br>[Potential support for string length](https://stackoverflow.com/questions/51813272/declaring-string-type-with-min-max-length-in-typescript)<br>[Typescript support for string patterns and formats in v4.1](https://stackoverflow.com/questions/51445767/how-to-define-a-regex-matched-string-type-in-typescript)
-| array properties | ✔ | items<br>uniqueItems<br><br>One element in items gives an `array` if `uniqueItems` is `false` and a `Set` if `uniqueItems` is `true`<br>Multiple elements give a `tuple`
-| array properties | ✘ | additionalItems<br>contains<br>minItems<br>maxItems<br><br>array (and possibly tuple) min length: `type MinLengthArray<T> = [T, T, ...T[]];` Although no typescript support for `Set<T>`<br>Potentially can do additionalItems<br>No typescript support for contains
-| object properties | ✔ | properties
-| object properties | ✘ | additionalProperties<br><br>eg. `type Example = { property: type } & Record<string, V>`
-|
+| array properties | ✔ | items<br>uniqueItems<br><br>`T[]` - Array if one element in `items` and `uniqueItems=false`<br>`Set<T>` - Set if one element in `items` and `uniqueItems=true`<br>`[T, U, V]` - Tuple if multiple elements in `items`
+| array properties | ✘ | additionalItems<br>contains<br>minItems<br>maxItems<br><br>array (and possibly tuple) min length: `type MinLengthArray<T> = [T, T, ...T[]];` Although no typescript support for a `Set<T>` of specific size<br>`additionalItems` is only meaningful for tuples, so could do it as `[T, ...V[]]`<br>No typescript support for contains
+| object properties | ✔ | properties<br>additionalProperties
 | combinations | ✔ | allOf<br>anyOf<br>oneOf<br><br>oneOf is supported for 90% of use cases with a workaround for unsupported cases. An action is in the [TODO](TODO.md) to support an arbitrary number of schemas in a oneOf array
-|
-| collections | ✔ | array<br>set<br>tuple<br><br>See array properties
 
 ## Approach
 
