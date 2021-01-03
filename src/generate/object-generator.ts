@@ -43,10 +43,10 @@ const objectGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredIn
     const valueType: string | undefined = (schema.additionalProperties)
       ? typeGenerator({ fileLocation: locatedSchema.fileLocation, schema: schema.additionalProperties }, gatheredInfo, inputInfo)
       : undefined;
-    if (!valueType) {
-      lastLineParts.push(inputInfo.options.ts.untyped);
-    } else {
+    if (valueType) {
       lastLineParts.push(valueType);
+    } else {
+      lastLineParts.push(inputInfo.options.ts.untyped);
     }
     lastLineParts.push('>');
     lines.push(lastLineParts.join(''));

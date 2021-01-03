@@ -18,6 +18,20 @@ const tupleGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInf
       elementTypesContent.push(content);
     }
   });
+  if (schema.additionalItems !== false) {
+    const lastTypeParts: string[] = [];
+    lastTypeParts.push('...');
+    const valueType: string | undefined = (schema.additionalItems)
+      ? typeGenerator({ fileLocation: locatedSchema.fileLocation, schema: schema.additionalItems }, gatheredInfo, inputInfo)
+      : undefined;
+    if (valueType) {
+      lastTypeParts.push(valueType);
+    } else {
+      lastTypeParts.push(inputInfo.options.ts.untyped);
+    }
+    lastTypeParts.push('[]');
+    elementTypesContent.push(lastTypeParts.join(''));
+  }
   const joined: string = elementTypesContent.join(', ');
   return `[${joined}]`;
 };

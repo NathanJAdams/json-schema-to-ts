@@ -15,17 +15,19 @@ const parse = (files: Map<FileLocation, string>): Map<FileLocation, Schema> => {
 const parseSchema = (rawSchema: RawSchema): Schema => {
   const _enum: SchemaEnum | undefined = parseEnum(rawSchema);
   const items: Schema | Schema[] | undefined = parseItems(rawSchema);
+  const additionalItems: false | Schema | undefined = parseAdditional(rawSchema.additionalItems);
   const allOf: Schema[] | undefined = parseArray(rawSchema.allOf);
   const anyOf: Schema[] | undefined = parseArray(rawSchema.anyOf);
   const oneOf: Schema[] | undefined = parseArray(rawSchema.oneOf);
   const properties: Map<string, Schema> | undefined = parseRecord(rawSchema.properties);
-  const additionalProperties: false | Schema | undefined = parseAdditionalProperties(rawSchema.additionalProperties);
+  const additionalProperties: false | Schema | undefined = parseAdditional(rawSchema.additionalProperties);
   const required: Set<string> | undefined = parseRequired(rawSchema);
   const definitions: Map<string, Schema> | undefined = parseRecord(rawSchema.definitions);
   return {
     ...rawSchema,
     enum: _enum,
     items,
+    additionalItems,
     allOf,
     anyOf,
     oneOf,
@@ -53,11 +55,11 @@ const parseItems = (rawSchema: RawSchema): Schema | Schema[] | undefined => {
   return parseSchema(rawSchema.items);
 };
 
-const parseAdditionalProperties = (additionalProperties?: false | RawSchema): false | Schema | undefined => {
-  if (!additionalProperties) {
-    return additionalProperties;
+const parseAdditional = (additional?: false | RawSchema): false | Schema | undefined => {
+  if (!additional) {
+    return additional;
   }
-  return parseSchema(additionalProperties);
+  return parseSchema(additional);
 };
 
 const parseArray = (array?: RawSchema[]): Schema[] | undefined => {

@@ -9,6 +9,7 @@ interface Schema {
   enum?: SchemaEnum;
   items?: Schema | Schema[];
   uniqueItems?: boolean;
+  additionalItems?: false | Schema;
   allOf?: Schema[];
   anyOf?: Schema[];
   oneOf?: Schema[];

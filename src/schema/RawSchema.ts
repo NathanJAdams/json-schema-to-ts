@@ -7,6 +7,7 @@ interface RawSchema {
   enum?: SchemaPrimitive[];
   items?: RawSchema | RawSchema[];
   uniqueItems?: boolean;
+  additionalItems?: false | RawSchema;
   allOf?: RawSchema[];
   anyOf?: RawSchema[];
   oneOf?: RawSchema[];
