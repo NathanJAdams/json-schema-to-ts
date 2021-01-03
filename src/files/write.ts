@@ -9,11 +9,41 @@ const write = (filesContent: Map<FileLocation, string>, options: AllOptions): Pr
     const cwd: string = options.files.cwd || process.cwd();
     const rootSourceDir: string = path.resolve(cwd, options.files.source.dir);
     const rootDestinationDir: string = path.resolve(cwd, options.files.destination.dir);
+    const folderFiles: Map<string, Set<string>> = new Map();
     filesContent.forEach((content: string, fileLocation: FileLocation) => {
       const relativeDir: string = path.relative(rootSourceDir, fileLocation.dir);
-      const absoluteFile: string = path.resolve(rootDestinationDir, relativeDir, fileLocation.fileName) + '.ts';
+      const absoluteDir: string = path.resolve(rootDestinationDir, relativeDir);
+      const absoluteFile: string = path.resolve(absoluteDir, fileLocation.fileName) + '.ts';
       const promise: Promise<void> = writeContent(content, absoluteFile);
+      let files: Set<string> | undefined = folderFiles.get(absoluteDir);
+      if (!files) {
+        files = new Set();
+        folderFiles.set(absoluteDir, files);
+      }
+      files.add(fileLocation.fileName);
       promises.push(promise);
+    });
+    if (options.files.destination.indexFiles) {
+      promises.push(createIndexFiles(folderFiles));
+    }
+    Promise.all(promises)
+      .then(() => resolve())
+      .catch(reject);
+  });
+};
+
+const createIndexFiles = (folderFiles: Map<string, Set<string>>): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const promises: Promise<void>[] = [];
+    Array.from(folderFiles.entries()).forEach(([folder, files]) => {
+      const indexFileName = `${folder}/index.ts`;
+      const contentLines: string[] = [];
+      files.forEach((file) => {
+        const line = `export * from './${file}';`;
+        contentLines.push(line);
+      });
+      const content: string = contentLines.join('\n');
+      promises.push(writeContent(content, indexFileName));
     });
     Promise.all(promises)
       .then(() => resolve())

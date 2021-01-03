@@ -23,6 +23,7 @@ interface AllOptions {
     destination: {
       dir: string;
       preClean: boolean;
+      indexFiles: boolean;
     };
   };
   ts: {
@@ -42,7 +43,8 @@ const DEFAULT_OPTIONS: AllOptions = {
     },
     destination: {
       dir: 'src/generated',
-      preClean: false
+      preClean: false,
+      indexFiles: true
     }
   },
   ts: {

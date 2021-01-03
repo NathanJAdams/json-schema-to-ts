@@ -43,6 +43,7 @@ The [Options](src/options.ts) object is defined as follows:
         destination: {
           dir: string;
           preClean: boolean;
+          indexFiles: boolean;
         };
       };
       ts: {
@@ -62,7 +63,8 @@ All options are optional and fall back to their defaults if not given, which are
       },
       destination: {
         dir: 'src/generated',
-        preClean: false
+        preClean: false,
+        indexFiles: true
       }
     },
     ts: {
@@ -75,6 +77,12 @@ The option
     files/destination/preClean
 
 defines whether the destination folder will be deleted before generating typescript files.<br><br>
+
+The option
+
+    files/destination/indexFiles
+
+defines whether index.ts files will be generated in each destination folder.<br><br>
 
 Note that the folders given by the options
 
