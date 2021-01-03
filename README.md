@@ -168,7 +168,7 @@ Support for properties defined in the JSON Schema are as follows:
 | array properties | ✔ | items<br>uniqueItems<br>additionalItems<br><br>`T[]` - Array if `items` is a schema and `uniqueItems=false`<br>`Set<T>` - Set if `items` is a schema and `uniqueItems=true`<br>`[T, U, V]` - Tuple if `items` is an array
 | array properties | ✘ | contains<br>minItems<br>maxItems<br><br>array (and possibly tuple) min length: `type MinLengthArray<T> = [T, T, ...T[]];` Although no typescript support for a `Set<T>` of specific size<br>No typescript support for contains
 | object properties | ✔ | properties<br>additionalProperties
-| combinations | ✔ | allOf<br>anyOf<br>oneOf<br><br>oneOf is supported for 90% of use cases with a workaround for unsupported cases see the [Issues](#Issues) section for details. An action is in the [TODO](TODO.md) to support an arbitrary number of schemas in a oneOf array
+| combinations | ✔ | allOf<br>anyOf<br>oneOf<br><br>oneOf is supported for 90% of use cases with a workaround for unsupported cases - see the [Issues](#Issues) section for details. An action is in the [TODO](TODO.md) to support an arbitrary number of schemas in a oneOf array
 
 ## Approach
 

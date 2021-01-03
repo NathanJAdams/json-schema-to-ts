@@ -2,27 +2,26 @@ import * as path from 'path';
 import { FileLocation } from '../files';
 import { Schema } from '../schema';
 import { filtered, filteredJoin } from '../util';
-import { ONE_OF, References } from './References';
+import { OneOfNGenerator } from './OneOf-generator';
+import { References } from './References';
 import { typeGenerator } from './type-generator';
 import { LocatedSchema, SchemaGatheredInfo, SchemaInputInfo } from './TypeGenerator';
-import { PACKAGE_NAME } from './util';
 
 const fileGenerator = (locatedSchema: LocatedSchema, inputInfo: SchemaInputInfo): string => {
-  const namedSchemas: Map<string, Schema> = new Map();
   const references: References = {
-    package: new Map(),
     schema: new Map()
   };
-  references.package.set(ONE_OF, new Set());
   const gatheredInfo: SchemaGatheredInfo = {
-    namedSchemas,
-    references
+    namedSchemas: new Map(),
+    references,
+    oneOfTypes: new Set()
   };
   const schemaContent: string | undefined = schemaContentGenerator(locatedSchema, gatheredInfo, inputInfo);
   const definitions: string | undefined = mapGenerator(locatedSchema.fileLocation, locatedSchema.schema.definitions, gatheredInfo, inputInfo);
   const named: string | undefined = namedGenerator(locatedSchema.fileLocation, gatheredInfo, inputInfo);
   const imports: string | undefined = importsGenerator(locatedSchema.fileLocation, references);
-  return filteredJoin([imports, schemaContent, named, definitions], '\n\n') + '\n';
+  const oneOfs: string | undefined = oneOfTypesGenerator(gatheredInfo.oneOfTypes);
+  return filteredJoin([imports, schemaContent, named, definitions, oneOfs], '\n\n') + '\n';
 };
 
 const schemaContentGenerator = (locatedSchema: LocatedSchema, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo, schemaName?: string): string | undefined => {
@@ -34,11 +33,10 @@ const schemaContentGenerator = (locatedSchema: LocatedSchema, gatheredInfo: Sche
 };
 
 const importsGenerator = (fileLocation: FileLocation, references: References): string | undefined => {
-  if (references.package.size === 0 && references.schema.size === 0) {
+  if (references.schema.size === 0) {
     return undefined;
   }
   const content: (string | undefined)[] = [];
-  content.push(importMapGenerator(fileLocation, references.package));
   content.push(importMapGenerator(fileLocation, references.schema));
   const defined: string[] = filtered(content);
   return defined.join('\n');
@@ -52,10 +50,7 @@ const importMapGenerator = (fileLocation: FileLocation, references: Map<FileLoca
   references.forEach((names: Set<string>, referenceFileLocation: FileLocation) => {
     if (names.size > 0) {
       const combinedNames: string = Array.from(names).sort().join(', ');
-      const dir: string = referenceFileLocation.dir;
-      const importPath: string = (dir === PACKAGE_NAME)
-        ? dir :
-        tsPathGenerator(path.normalize(path.relative(fileLocation.dir, dir)));
+      const importPath: string = tsPathGenerator(path.normalize(path.relative(fileLocation.dir, referenceFileLocation.dir)));
       const file: string = (referenceFileLocation.fileName.length === 0)
         ? ''
         : `/${referenceFileLocation.fileName}`;
@@ -69,15 +64,14 @@ const namedGenerator = (fileLocation: FileLocation, gatheredInfo: SchemaGathered
   if (gatheredInfo.namedSchemas.size === 0) {
     return undefined;
   }
-  const references: References = gatheredInfo.references;
   const content: string[] = [];
 
   /* eslint-disable no-constant-condition */
   while (true) {
     const map: Map<string, Schema> = gatheredInfo.namedSchemas;
     gatheredInfo = {
-      namedSchemas: new Map(),
-      references
+      ...gatheredInfo,
+      namedSchemas: new Map()
     };
     const mapContent: string | undefined = mapGenerator(fileLocation, map, gatheredInfo, inputInfo);
     if (mapContent) {
@@ -88,6 +82,20 @@ const namedGenerator = (fileLocation: FileLocation, gatheredInfo: SchemaGathered
         : content.join('\n');
     }
   }
+};
+
+const oneOfTypesGenerator = (typeCounts: Set<number>): string | undefined => {
+  if (typeCounts.size === 0) {
+    return undefined;
+  }
+  const oneOfTypeLines: string[] = [];
+  typeCounts.forEach((typeCount: number) => {
+    const oneOfType: string | undefined = OneOfNGenerator(typeCount);
+    if (oneOfType) {
+      oneOfTypeLines.push(oneOfType);
+    }
+  });
+  return oneOfTypeLines.join('\n');
 };
 
 const mapGenerator = (fileLocation: FileLocation, map: Map<string, Schema> | undefined, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {

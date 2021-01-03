@@ -1,6 +1,5 @@
 import { Schema } from '../schema';
 import { filtered } from '../util';
-import { ONE_OF } from './References';
 import { LocatedSchema, SchemaGatheredInfo, SchemaInputInfo, TypeGenerator } from './TypeGenerator';
 import { typeGenerator } from './type-generator';
 
@@ -23,11 +22,9 @@ const oneOfGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInf
     return undefined;
   } else if (filteredLines.length === 1) {
     return filteredLines[0];
-  } else if (filteredLines.length > 8) {
-    throw Error('Cannot currently create OneOf type for more than 8 types');
   } else {
+    gatheredInfo.oneOfTypes.add(filteredLines.length);
     const typeName = `OneOf_${filteredLines.length}`;
-    gatheredInfo.references.package.get(ONE_OF)?.add(typeName);
     const combinedTypeNames: string = filteredLines.join(', ');
     return `${typeName}<${combinedTypeNames}>`;
   }

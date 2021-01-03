@@ -11,6 +11,7 @@ interface LocatedSchema {
 interface SchemaGatheredInfo {
   namedSchemas: Map<string, Schema>;
   references: References;
+  oneOfTypes: Set<number>;
 }
 
 interface SchemaInputInfo {
