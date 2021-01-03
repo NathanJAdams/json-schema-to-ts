@@ -72,6 +72,12 @@ All options are optional and fall back to their defaults if not given, which are
       untyped: UntypedType.UNKNOWN
     }
 
+The option
+
+    files/destination/preClean
+
+defines whether the destination folder will be deleted before generating typescript files.<br><br>
+
 Note that the folders given by the options
 
     files/source/dir
@@ -80,12 +86,6 @@ Note that the folders given by the options
 will be resolved relative to the folder given by the option
 
     files/cwd
-
-The option
-
-    files/destination/preClean
-
-defines whether the destination folder will be deleted before generating typescript files
 
 
 ## Typescript
@@ -160,19 +160,19 @@ Support for properties defined in the JSON Schema are as follows:
 |---------|-----|------
 | $id     | ✔
 | $schema | ✘ | Action in TODO to support specific schema versions
-| $ref | ✔ | local definition<br>absolute root/inner<br>relative root/inner
+| $ref | ✔ | local definition<br>absolute reference to root/inner definition<br>relative reference to root/inner definition
 | enum | ✔ | null<br>booleans<br>numbers<br>strings
 | type | ✔ | null<br>boolean<br>integer<br>number<br>string<br>array<br>object
 | number properties | ✘ | multipleOf<br>minimum<br>maximum<br>exclusiveMinimum<br>exclusiveMaximum<br><br>No typescript support for `multipleOf`<br>[Open question on GitHub about number ranges](https://github.com/Microsoft/TypeScript/issues/15480)
 | string properties | ✘ | minLength<br>maxLength<br>pattern<br>format<br><br>[Potential support for string length](https://stackoverflow.com/questions/51813272/declaring-string-type-with-min-max-length-in-typescript)<br>[Typescript support for string patterns and formats in v4.1](https://stackoverflow.com/questions/51445767/how-to-define-a-regex-matched-string-type-in-typescript)
-| array properties | ✔ | items<br>uniqueItems<br><br>`T[]` - Array if one element in `items` and `uniqueItems=false`<br>`Set<T>` - Set if one element in `items` and `uniqueItems=true`<br>`[T, U, V]` - Tuple if multiple elements in `items`
-| array properties | ✘ | additionalItems<br>contains<br>minItems<br>maxItems<br><br>array (and possibly tuple) min length: `type MinLengthArray<T> = [T, T, ...T[]];` Although no typescript support for a `Set<T>` of specific size<br>`additionalItems` is only meaningful for tuples, so could do it as `[T, ...V[]]`<br>No typescript support for contains
+| array properties | ✔ | items<br>uniqueItems<br>additionalItems<br><br>`T[]` - Array if `items` is a schema and `uniqueItems=false`<br>`Set<T>` - Set if `items` is a schema and `uniqueItems=true`<br>`[T, U, V]` - Tuple if `items` is an array
+| array properties | ✘ | contains<br>minItems<br>maxItems<br><br>array (and possibly tuple) min length: `type MinLengthArray<T> = [T, T, ...T[]];` Although no typescript support for a `Set<T>` of specific size<br>No typescript support for contains
 | object properties | ✔ | properties<br>additionalProperties
 | combinations | ✔ | allOf<br>anyOf<br>oneOf<br><br>oneOf is supported for 90% of use cases with a workaround for unsupported cases. An action is in the [TODO](TODO.md) to support an arbitrary number of schemas in a oneOf array
 
 ## Approach
 
-The approach this utility takes is to only do one thing but do it well. It doesn't do any validation, consistency checking, linting, prettifying etc. It assumes the schema author knows exactly what they want and it will generate typescript files that represent the schemas given as closely as possible, even if the generated types don't make sense or cannot be satisfied.
+The approach this utility takes is to only do one thing but do it well, ie. transforming schema files to typescript files. It doesn't download any schemas, or do any validation, consistency checking, linting, prettifying etc. It assumes the schema author knows exactly what they want and it will generate typescript files that represent the schemas given as closely as possible, even if the generated types don't make sense or cannot be satisfied.
 
 An example will make this clear:
 
