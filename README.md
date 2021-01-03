@@ -1,5 +1,5 @@
 # json-schema-typescript-generator
-A utility to generate typescript files from json schema files
+Generate typescript files from json schema files
 
 ## Contents
 [Install](#Install)
@@ -164,7 +164,7 @@ Support for properties defined in the JSON Schema are as follows:
 | enum | ✔ | null<br>booleans<br>numbers<br>strings
 | type | ✔ | null<br>boolean<br>integer<br>number<br>string<br>array<br>object
 | number properties | ✘ | multipleOf<br>minimum<br>maximum<br>exclusiveMinimum<br>exclusiveMaximum<br><br>No typescript support for `multipleOf`<br>[Open question on GitHub about number ranges](https://github.com/Microsoft/TypeScript/issues/15480)
-| string properties | ✘ | minLength<br>maxLength<br>pattern<br>format<br><br>[Potential support for string length](https://stackoverflow.com/questions/51813272/declaring-string-type-with-min-max-length-in-typescript)<br>[Typescript support for string patterns and formats in v4.1](https://stackoverflow.com/questions/51445767/how-to-define-a-regex-matched-string-type-in-typescript)
+| string properties | ✘ | minLength<br>maxLength<br>pattern<br>format<br><br>[Typescript support for string patterns and formats in v4.1](https://stackoverflow.com/questions/51445767/how-to-define-a-regex-matched-string-type-in-typescript)<br>Typescript's implementation produces a union of every possible combination so is not suitable for patterns or formats
 | array properties | ✔ | items<br>uniqueItems<br>additionalItems<br><br>`T[]` - Array if `items` is a schema and `uniqueItems=false`<br>`Set<T>` - Set if `items` is a schema and `uniqueItems=true`<br>`[T, U, V]` - Tuple if `items` is an array
 | array properties | ✘ | contains<br>minItems<br>maxItems<br><br>array (and possibly tuple) min length: `type MinLengthArray<T> = [T, T, ...T[]];` Although no typescript support for a `Set<T>` of specific size<br>No typescript support for contains
 | object properties | ✔ | properties<br>additionalProperties
