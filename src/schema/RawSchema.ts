@@ -11,6 +11,7 @@ interface RawSchema {
   anyOf?: RawSchema[];
   oneOf?: RawSchema[];
   properties?: Record<string, RawSchema>;
+  additionalProperties?: false | RawSchema;
   required?: string[];
   definitions?: Record<string, RawSchema>;
 }

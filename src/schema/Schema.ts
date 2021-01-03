@@ -13,6 +13,7 @@ interface Schema {
   anyOf?: Schema[];
   oneOf?: Schema[];
   properties?: Map<string, Schema>;
+  additionalProperties?: false | Schema;
   required?: Set<string>;
   definitions?: Map<string, Schema>;
 }

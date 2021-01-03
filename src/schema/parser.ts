@@ -19,6 +19,7 @@ const parseSchema = (rawSchema: RawSchema): Schema => {
   const anyOf: Schema[] | undefined = parseArray(rawSchema.anyOf);
   const oneOf: Schema[] | undefined = parseArray(rawSchema.oneOf);
   const properties: Map<string, Schema> | undefined = parseRecord(rawSchema.properties);
+  const additionalProperties: false | Schema | undefined = parseAdditionalProperties(rawSchema.additionalProperties);
   const required: Set<string> | undefined = parseRequired(rawSchema);
   const definitions: Map<string, Schema> | undefined = parseRecord(rawSchema.definitions);
   return {
@@ -29,6 +30,7 @@ const parseSchema = (rawSchema: RawSchema): Schema => {
     anyOf,
     oneOf,
     properties,
+    additionalProperties,
     required,
     definitions
   };
@@ -49,6 +51,13 @@ const parseItems = (rawSchema: RawSchema): Schema | Schema[] | undefined => {
     return rawSchema.items.map(parseSchema);
   }
   return parseSchema(rawSchema.items);
+};
+
+const parseAdditionalProperties = (additionalProperties?: false | RawSchema): false | Schema | undefined => {
+  if (!additionalProperties) {
+    return additionalProperties;
+  }
+  return parseSchema(additionalProperties);
 };
 
 const parseArray = (array?: RawSchema[]): Schema[] | undefined => {
