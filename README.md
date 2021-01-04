@@ -174,11 +174,11 @@ Support for properties defined in the JSON Schema are as follows:
 | array properties | ✔ | items<br>uniqueItems<br>additionalItems<br><br>`T[]` - Array if `items` is a schema and `uniqueItems=false`<br>`Set<T>` - Set if `items` is a schema and `uniqueItems=true`<br>`[T, U, V]` - Tuple if `items` is an array
 | array properties | ✘ | contains<br>minItems<br>maxItems<br><br>array (and possibly tuple) min length: `type MinLengthArray<T> = [T, T, ...T[]];` Although no typescript support for a `Set<T>` of specific size<br>No typescript support for contains
 | object properties | ✔ | properties<br>additionalProperties
-| combinations | ✔ | allOf<br>anyOf<br>oneOf<br><br>If oneOf is used, dynamic OneOf_n types are generated in files that need them, these can get large and will be updated if typescript adds native support
+| combinations | ✔ | allOf<br>anyOf<br>oneOf<br><br>If oneOf is used, OneOf_n types are dynamically generated in files that need them, for arrays with many items these types can get large and will be updated if typescript adds native support
 
 ## Approach
 
-The approach this utility takes is to only do one thing but do it well, ie. transforming schema files to typescript files. It doesn't download any schemas, or do any validation, consistency checking, linting, prettifying etc. It assumes the schema author knows exactly what they want and it will generate typescript files that represent the schemas given as closely as possible, even if the generated types don't make sense or cannot be satisfied.
+The approach this package takes is to only do one thing but do it well, ie. transforming schema files to typescript files. It doesn't download any schemas, or do any validation, consistency checking, linting, prettifying etc. It assumes the schema author knows exactly what they want and it will generate typescript files that represent the schemas given as closely as possible, even if the generated types don't make sense or cannot be satisfied.
 
 An example will make this clear:
 
@@ -192,14 +192,6 @@ Given the following schema in a file called `A.json`
         "tuv",
         "xyz"
       ],
-      "oneOf": [
-        {
-          "type": "string"
-        },
-        {
-          "$ref": "#/definitions/BOOL"
-        }
-      ],
       "definitions": {
         "BOOL": {
           "type": "boolean"
@@ -209,12 +201,9 @@ Given the following schema in a file called `A.json`
 
 Invoking the generator will generate a file `A.ts` containing:
 
-    import { OneOf_2 } from 'json-schema-typescript-generator';
-
     export type A = number
     & BOOL
-    & (null | 'tuv' | 'xyz')
-    & OneOf_2<string, BOOL>;
+    & (null | 'tuv' | 'xyz');
 
     export type BOOL = boolean;
 
