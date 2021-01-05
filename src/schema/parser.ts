@@ -1,6 +1,7 @@
 import { RawSchema } from './RawSchema';
 import { Schema, SchemaEnum } from '.';
 import { FileLocation } from '../files';
+import { SchemaPrimitive } from './Schema';
 
 const parse = (files: Map<FileLocation, string>): Map<FileLocation, Schema> => {
   const schemas: Map<FileLocation, Schema> = new Map();
@@ -13,18 +14,20 @@ const parse = (files: Map<FileLocation, string>): Map<FileLocation, Schema> => {
 };
 
 const parseSchema = (rawSchema: RawSchema): Schema => {
-  const _enum: SchemaEnum | undefined = parseEnum(rawSchema);
-  const items: Schema | Schema[] | undefined = parseItems(rawSchema);
+  const type: Set<string> | undefined = parseType(rawSchema.type);
+  const _enum: SchemaEnum | undefined = parseEnum(rawSchema.enum);
+  const items: Schema | Schema[] | undefined = parseItems(rawSchema.items);
   const additionalItems: false | Schema | undefined = parseAdditional(rawSchema.additionalItems);
   const allOf: Schema[] | undefined = parseArray(rawSchema.allOf);
   const anyOf: Schema[] | undefined = parseArray(rawSchema.anyOf);
   const oneOf: Schema[] | undefined = parseArray(rawSchema.oneOf);
   const properties: Map<string, Schema> | undefined = parseRecord(rawSchema.properties);
   const additionalProperties: false | Schema | undefined = parseAdditional(rawSchema.additionalProperties);
-  const required: Set<string> | undefined = parseRequired(rawSchema);
+  const required: Set<string> | undefined = parseRequired(rawSchema.required);
   const definitions: Map<string, Schema> | undefined = parseRecord(rawSchema.definitions);
   return {
     ...rawSchema,
+    type,
     enum: _enum,
     items,
     additionalItems,
@@ -38,21 +41,34 @@ const parseSchema = (rawSchema: RawSchema): Schema => {
   };
 };
 
-const parseEnum = (rawSchema: RawSchema): SchemaEnum | undefined => {
-  if (!rawSchema.enum) {
+const parseType = (type?: string | string[]): Set<string> | undefined => {
+  if (!type) {
     return undefined;
   }
-  return new Set(rawSchema.enum);
+  if (typeof type === 'string') {
+    const set: Set<string> = new Set();
+    set.add(type);
+    return set;
+  } else {
+    return new Set(type);
+  }
 };
 
-const parseItems = (rawSchema: RawSchema): Schema | Schema[] | undefined => {
-  if (!rawSchema.items) {
+const parseEnum = (_enum?: SchemaPrimitive[]): SchemaEnum | undefined => {
+  if (!_enum) {
     return undefined;
   }
-  if (Array.isArray(rawSchema.items)) {
-    return rawSchema.items.map(parseSchema);
+  return new Set(_enum);
+};
+
+const parseItems = (items?: RawSchema | RawSchema[]): Schema | Schema[] | undefined => {
+  if (!items) {
+    return undefined;
   }
-  return parseSchema(rawSchema.items);
+  if (Array.isArray(items)) {
+    return items.map(parseSchema);
+  }
+  return parseSchema(items);
 };
 
 const parseAdditional = (additional?: false | RawSchema): false | Schema | undefined => {
@@ -82,11 +98,11 @@ const parseRecord = (record?: Record<string, RawSchema>): Map<string, Schema> | 
   return parsed;
 };
 
-const parseRequired = (rawSchema: RawSchema): Set<string> | undefined => {
-  if (!rawSchema.required) {
+const parseRequired = (required?: string[]): Set<string> | undefined => {
+  if (!required) {
     return undefined;
   }
-  return new Set(rawSchema.required);
+  return new Set(required);
 };
 
 export {

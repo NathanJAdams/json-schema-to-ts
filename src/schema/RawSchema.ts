@@ -2,7 +2,7 @@ import { SchemaPrimitive } from '.';
 
 interface RawSchema {
   $id?: string;
-  type?: string;
+  type?: string | string[];
   $ref?: string;
   enum?: SchemaPrimitive[];
   items?: RawSchema | RawSchema[];

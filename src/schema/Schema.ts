@@ -4,8 +4,8 @@ type SchemaEnum = Set<SchemaPrimitive>;
 
 interface Schema {
   $id?: string;
-  type?: string;
   $ref?: string;
+  type?: Set<string>;
   enum?: SchemaEnum;
   items?: Schema | Schema[];
   uniqueItems?: boolean;

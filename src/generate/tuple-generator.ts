@@ -4,7 +4,7 @@ import { typeGenerator } from './type-generator';
 
 const tupleGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
   const schema: Schema = locatedSchema.schema;
-  if (!schema.type || schema.type !== 'array' || !schema.items || !Array.isArray(schema.items)) {
+  if (!schema.type || !schema.type.has('array') || !schema.items || !Array.isArray(schema.items)) {
     return undefined;
   }
   const elementTypesContent: string[] = [];
