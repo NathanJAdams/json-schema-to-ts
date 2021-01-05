@@ -57,29 +57,31 @@ The [Options](src/options.ts) object is defined as follows:
 All options are optional and fall back to their defaults if not given, which are as follows:
 
 ```ts
-files: {
-  cwd: process.cwd(),
-  source: {
-    dir: 'src/schemas',
-    encoding: 'utf-8',
-    recursive: true
+{
+  files: {
+    cwd: process.cwd(),
+    source: {
+      dir: 'src/schemas',
+      encoding: 'utf-8',
+      recursive: true
+    },
+    destination: {
+      dir: 'src/generated',
+      preClean: false,
+      indexFiles: true
+    }
   },
-  destination: {
-    dir: 'src/generated',
-    preClean: false,
-    indexFiles: true
+  ts: {
+    optionalFields: OptionalFieldPattern.QUESTION,
+    untyped: UntypedType.UNKNOWN
   }
-},
-ts: {
-  optionalFields: OptionalFieldPattern.QUESTION,
-  untyped: UntypedType.UNKNOWN
 }
 ```
 
 The option
 
 ```ts
-files.destination.preClean
+options.files.destination.preClean
 ```
 
 defines whether the destination folder will be deleted before generating typescript files.<br><br>
@@ -87,7 +89,7 @@ defines whether the destination folder will be deleted before generating typescr
 The option
 
 ```ts
-files.destination.indexFiles
+options.files.destination.indexFiles
 ```
 
 defines whether index.ts files will be generated in each destination folder.<br><br>
@@ -95,14 +97,14 @@ defines whether index.ts files will be generated in each destination folder.<br>
 Note that the folders given by the options
 
 ```ts
-files.source.dir
-files.destination.dir
+options.files.source.dir
+options.files.destination.dir
 ```
 
 will be resolved relative to the folder given by the option
 
 ```ts
-files.cwd
+options.files.cwd
 ```
 
 
@@ -115,7 +117,7 @@ There are 2 options which define the style of code generated
 The option
 
 ```ts
-ts.optionalFields
+options.ts.optionalFields
 ```
 
 defines how optional fields are represented and can take 1 of 2 values:
@@ -143,7 +145,7 @@ type Example = {
 The option
 
 ```ts
-ts.untyped
+options.ts.untyped
 ```
 
 defines the fallback type used for types that failed to be generated, eg. perhaps the schema was empty, or an id was missing or a typo was made in a $ref entry etc. It can take 1 of 4 values:
