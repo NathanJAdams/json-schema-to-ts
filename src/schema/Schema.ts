@@ -6,6 +6,7 @@ interface Schema {
   $id?: string;
   $ref?: string;
   type?: Set<string>;
+  const?: null | boolean | number | string;
   enum?: SchemaEnum;
   items?: Schema | Schema[];
   uniqueItems?: boolean;
