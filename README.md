@@ -197,6 +197,7 @@ Support for properties defined in the JSON Schema are as follows:
 | $id     | ✔
 | $schema | ✘ | Action in TODO to support specific schema versions
 | $ref | ✔ | local definition<br>absolute reference to root/inner definition<br>relative reference to root/inner definition
+| $defs | ✔ | Combined with `definitions`
 | const | ✔ | null<br>booleans<br>numbers<br>strings
 | enum | ✔ | null<br>booleans<br>numbers<br>strings
 | type | ✔ | "null"<br>"boolean"<br>"integer"<br>"number"<br>"string"<br>"array"<br>"object"<br><br>Or an array of the above
