@@ -24,7 +24,13 @@ const parseSchema = (rawSchema: RawSchema): Schema => {
   const properties: Map<string, Schema> | undefined = parseRecord(rawSchema.properties);
   const additionalProperties: false | Schema | undefined = parseAdditional(rawSchema.additionalProperties);
   const required: Set<string> | undefined = parseRequired(rawSchema.required);
+  const defs: Map<string, Schema> | undefined = parseRecord(rawSchema.$defs);
   const definitions: Map<string, Schema> | undefined = parseRecord(rawSchema.definitions);
+  if (defs && definitions) {
+    defs?.forEach((schema: Schema, key: string) => {
+      definitions?.set(key, schema);
+    });
+  }
   return {
     ...rawSchema,
     type,
@@ -37,7 +43,7 @@ const parseSchema = (rawSchema: RawSchema): Schema => {
     properties,
     additionalProperties,
     required,
-    definitions
+    definitions: (definitions) ? definitions : defs
   };
 };
 
