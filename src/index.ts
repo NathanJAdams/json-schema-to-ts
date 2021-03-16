@@ -1,2 +1,2 @@
 export * from './main';
-export { OptionalFieldPattern, Options } from './options';
+export { OptionalFieldPattern, UntypedType, Options } from './options';
