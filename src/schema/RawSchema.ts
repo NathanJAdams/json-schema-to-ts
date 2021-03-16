@@ -2,8 +2,10 @@ import { SchemaPrimitive } from '.';
 
 interface RawSchema {
   $id?: string;
-  type?: string | string[];
   $ref?: string;
+  $defs?: Record<string, RawSchema>;
+  type?: string | string[];
+  const?: null | boolean | number | string;
   enum?: SchemaPrimitive[];
   items?: RawSchema | RawSchema[];
   uniqueItems?: boolean;
