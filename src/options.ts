@@ -76,6 +76,7 @@ const createOptions = (options: PartialDeep<AllOptions>): AllOptions => {
 
 export {
   OptionalFieldPattern,
+  UntypedType,
   AllOptions,
   Options,
   DEFAULT_OPTIONS,
