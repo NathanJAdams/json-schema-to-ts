@@ -11,8 +11,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Check
-        run: cat ~/.npmrc
       - name: Add credentials
         run: echo "//<npm-registry>:8080/:_authToken=$NPM_AUTH_TOKEN" > ~/.npmrc
       - name: Check
