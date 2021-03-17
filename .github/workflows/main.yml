@@ -10,14 +10,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Check
-        run: env
       - name: Add credentials
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         run: echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" > ~/.npmrc
-      - name: Check
-        run: cat ~/.npmrc
       - name: Install
         run: yarn install
       - name: Build
