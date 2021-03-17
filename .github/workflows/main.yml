@@ -10,7 +10,9 @@ jobs:
     environment: publish
     steps:
       - uses: actions/checkout@v2
-
+      
+      - name: Add credentials
+        run: echo "//<npm-registry>:8080/:_authToken=$NPM_AUTH_TOKEN" > ~/.npmrc
       - name: Install
         run: yarn install
       - name: Build
