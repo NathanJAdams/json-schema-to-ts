@@ -7,13 +7,14 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    environment: publish
     steps:
       - uses: actions/checkout@v2
 
       - name: Check
         run: env
       - name: Add credentials
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         run: echo "//<npm-registry>:8080/:_authToken=$NPM_AUTH_TOKEN" > ~/.npmrc
       - name: Check
         run: cat ~/.npmrc
