@@ -5,7 +5,7 @@ import { fileGenerator } from './file-generator';
 import { idLocations } from './id-locations';
 import { LocatedSchema, SchemaInputInfo } from './TypeGenerator';
 
-const generate = (fileSchemas: Map<FileLocation, Schema>, options: AllOptions): Map<FileLocation, string> => {
+const generateFileContents = (fileSchemas: Map<FileLocation, Schema>, options: AllOptions): Map<FileLocation, string> => {
   const idFileLocations: Map<string, FileLocation> = idLocations(fileSchemas);
   const fileContent: Map<FileLocation, string> = new Map();
   const inputInfo: SchemaInputInfo = {
@@ -24,5 +24,5 @@ const generate = (fileSchemas: Map<FileLocation, Schema>, options: AllOptions): 
 };
 
 export {
-  generate
+  generateFileContents
 };
