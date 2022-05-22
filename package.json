@@ -1,10 +1,11 @@
 {
   "name": "json-schema-typescript-generator",
-  "version": "1.5.7",
+  "version": "1.5.9",
   "author": {
     "name": "Nathan Adams",
     "url": "https://github.com/NathanJAdams"
   },
+  "license" : "MIT",
   "homepage": "https://github.com/NathanJAdams/json-schema-to-ts",
   "repository": {
     "url": "https://github.com/NathanJAdams/json-schema-to-ts"
