@@ -18,7 +18,7 @@ const clean = (options: AllOptions): Promise<void> => {
 
 const rmrf = (dir: string): Promise<void> => {
   return new Promise((resolve, reject) => {
-    const func = (err: Error | null): void => {
+    const func = (err: Error | null | undefined): void => {
       if (err) {
         reject();
       } else {

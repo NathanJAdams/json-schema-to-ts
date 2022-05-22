@@ -2,7 +2,7 @@ import * as path from 'path';
 import { FileLocation } from '../files';
 import { Schema } from '../schema';
 import { filtered, filteredJoin } from '../util';
-import { OneOfNGenerator } from './OneOf-generator';
+import { OneOfNGenerator } from './OneOfN-generator';
 import { References } from './References';
 import { typeGenerator } from './type-generator';
 import { LocatedSchema, SchemaGatheredInfo, SchemaInputInfo } from './TypeGenerator';
