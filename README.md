@@ -28,7 +28,7 @@ To generate .ts files, invoke the `generateFiles` function with an `Options` obj
 import { generateFiles, Options } from 'json-schema-typescript-generator';
 
 const options: Options = {...}
-generateFiles(options);
+await generateFiles(options);
 ```
 
 The [Options](src/options.ts) object is defined as follows:
