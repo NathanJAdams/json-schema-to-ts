@@ -1,1 +1,1 @@
-export * from './files-generator';
+export * from './file-contents-generator';
