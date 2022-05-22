@@ -22,13 +22,13 @@ yarn add json-schema-typescript-generator -D
 ```
 
 ## Usage
-To generate .ts files, invoke the `main` function with an `Options` object like so
+To generate .ts files, invoke the `generateFiles` function with an `Options` object like so
 
 ```ts
-import { main, Options } from 'json-schema-typescript-generator';
+import { generateFiles, Options } from 'json-schema-typescript-generator';
 
 const options: Options = {...}
-main(options);
+generateFiles(options);
 ```
 
 The [Options](src/options.ts) object is defined as follows:
