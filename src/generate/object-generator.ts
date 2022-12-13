@@ -1,6 +1,7 @@
 import { OptionalFieldPattern } from '../options';
 import { Schema } from '../schema';
 import { LocatedSchema, SchemaGatheredInfo, SchemaInputInfo, TypeGenerator } from './TypeGenerator';
+import { nameGenerator } from './name-generator';
 import { typeGenerator } from './type-generator';
 
 const objectGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
@@ -22,7 +23,8 @@ const objectGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredIn
         const isQuestion: boolean = (!isRequired && inputInfo.options.ts.optionalFields == OptionalFieldPattern.QUESTION);
         const isPipeUndefined: boolean = (!isRequired && inputInfo.options.ts.optionalFields == OptionalFieldPattern.PIPE_UNDEFINED);
         const lineParts: string[] = [];
-        lineParts.push(name);
+        const propertyName = nameGenerator(name);
+        lineParts.push(propertyName);
         if (isQuestion) {
           lineParts.push('?');
         }
