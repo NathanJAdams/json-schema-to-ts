@@ -4,6 +4,7 @@ import { Schema } from '../schema';
 import { filtered, filteredJoin } from '../util';
 import { OneOfNGenerator } from './OneOfN-generator';
 import { References } from './References';
+import { nameGenerator } from './name-generator';
 import { typeGenerator } from './type-generator';
 import { LocatedSchema, SchemaGatheredInfo, SchemaInputInfo } from './TypeGenerator';
 
@@ -25,7 +26,7 @@ const fileGenerator = (locatedSchema: LocatedSchema, inputInfo: SchemaInputInfo)
 };
 
 const schemaContentGenerator = (locatedSchema: LocatedSchema, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo, schemaName?: string): string | undefined => {
-  const typeName: string = typeNameGenerator(schemaName || locatedSchema.fileLocation.fileName);
+  const typeName: string = nameGenerator(schemaName || locatedSchema.fileLocation.fileName);
   const typeContent: string | undefined = typeGenerator(locatedSchema, gatheredInfo, inputInfo);
   return (typeContent)
     ? `export type ${typeName} = ${typeContent};`
@@ -114,13 +115,6 @@ const mapGenerator = (fileLocation: FileLocation, map: Map<string, Schema> | und
     }
   });
   return content.join('\n');
-};
-
-const typeNameGenerator = (fileName: string): string => {
-  const usableChars: string = fileName.replace(/[^a-zA-Z0-9_]/g, '');
-  return ((usableChars.length > 0) && usableChars.match(/^[a-zA-Z_]/))
-    ? usableChars
-    : '_' + usableChars;
 };
 
 const tsPathGenerator = (relativePath: string): string => relativePath.startsWith('.') ? relativePath : '.' + path.sep + relativePath;
