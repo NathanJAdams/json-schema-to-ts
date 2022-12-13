@@ -7,4 +7,4 @@ const nameGenerator = (name: string): string => {
 
 export {
   nameGenerator
-}
+};
