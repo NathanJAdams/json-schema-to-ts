@@ -24,7 +24,7 @@
   "scripts": {
     "build": "yarn lint && yarn tsc",
     "lint": "eslint . --fix",
-    "test": "jest --silent=false --runInBand",
+    "test": "jest",
     "tsc": "rimraf ./dist && tsc"
   },
   "dependencies": {
