@@ -15,4 +15,6 @@ const generateFiles = async (options: Options): Promise<void> => {
   await write(generatedFileContents, allOptions);
 };
 
-export { generateFiles };
+export {
+  generateFiles
+};

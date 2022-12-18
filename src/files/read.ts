@@ -32,4 +32,6 @@ const toFileLocation = (file: string): FileLocation => {
   };
 };
 
-export { read };
+export {
+  read
+};

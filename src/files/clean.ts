@@ -12,4 +12,6 @@ const clean = async (options: AllOptions): Promise<void> => {
   await promisify(rimraf)(absoluteDir);
 };
 
-export { clean };
+export {
+  clean
+};
