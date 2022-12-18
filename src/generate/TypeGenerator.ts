@@ -1,4 +1,5 @@
 import { FileLocation } from '../files';
+import { SchemaId } from '../ids';
 import { AllOptions } from '../options';
 import { Schema } from '../schema';
 import { References } from './References';
@@ -16,7 +17,7 @@ interface SchemaGatheredInfo {
 
 interface SchemaInputInfo {
   options: AllOptions;
-  idFileLocations: Map<string, FileLocation>;
+  idFileLocations: Map<SchemaId, FileLocation>;
 }
 
 interface TypeGenerator {

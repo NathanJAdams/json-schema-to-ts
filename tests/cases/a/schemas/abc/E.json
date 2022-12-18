@@ -1,0 +1,16 @@
+{
+  "$id": "https://abc.com/a/b/c/E",
+  "type": "object",
+  "properties": {
+    "f": {
+      "$ref": "#F"
+    }
+  },
+  "additionalProperties": false,
+  "required": ["f"],
+  "definitions": {
+    "F": {
+      "enum": [true]
+    }
+  }
+}

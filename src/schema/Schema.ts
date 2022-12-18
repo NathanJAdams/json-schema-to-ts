@@ -1,10 +1,12 @@
+import { SchemaId, SchemaRef } from '../ids';
+
 type SchemaPrimitive = null | boolean | number | string;
 
 type SchemaEnum = Set<SchemaPrimitive>;
 
 interface Schema {
-  $id?: string;
-  $ref?: string;
+  $id?: SchemaId;
+  $ref?: SchemaRef;
   type?: Set<string>;
   const?: null | boolean | number | string;
   enum?: SchemaEnum;

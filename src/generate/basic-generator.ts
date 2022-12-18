@@ -22,9 +22,9 @@ const basicGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInf
     }
   });
   const tsTypes: string[] = Array.from(tsTypesSet);
-  const collectionType: string | undefined = collectionGenerator(locatedSchema, gatheredInfo, inputInfo);
-  const tupleType: string | undefined = tupleGenerator(locatedSchema, gatheredInfo, inputInfo);
-  const objectType: string | undefined = objectGenerator(locatedSchema, gatheredInfo, inputInfo);
+  const collectionType = collectionGenerator(locatedSchema, gatheredInfo, inputInfo);
+  const tupleType = tupleGenerator(locatedSchema, gatheredInfo, inputInfo);
+  const objectType = objectGenerator(locatedSchema, gatheredInfo, inputInfo);
   if (collectionType) {
     tsTypes.push(collectionType);
   }

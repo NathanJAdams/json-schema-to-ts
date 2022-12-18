@@ -4,7 +4,7 @@ import { LocatedSchema, SchemaGatheredInfo, SchemaInputInfo, TypeGenerator } fro
 import { typeGenerator } from './type-generator';
 
 const oneOfGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
-  const schema: Schema = locatedSchema.schema;
+  const schema = locatedSchema.schema;
   if (!schema.oneOf || schema.oneOf.length === 0) {
     return undefined;
   }
@@ -14,7 +14,7 @@ const oneOfGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInf
       fileLocation: locatedSchema.fileLocation,
       schema: elementSchema
     };
-    const elementContent: string | undefined = typeGenerator(elementLocatedSchema, gatheredInfo, inputInfo);
+    const elementContent = typeGenerator(elementLocatedSchema, gatheredInfo, inputInfo);
     lines.push(elementContent);
   });
   const filteredLines: string[] = filtered(lines);
@@ -25,7 +25,7 @@ const oneOfGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInf
   } else {
     gatheredInfo.oneOfTypes.add(filteredLines.length);
     const typeName = `OneOf_${filteredLines.length}`;
-    const combinedTypeNames: string = filteredLines.join(', ');
+    const combinedTypeNames = filteredLines.join(', ');
     return `${typeName}<${combinedTypeNames}>`;
   }
 };

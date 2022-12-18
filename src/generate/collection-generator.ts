@@ -1,10 +1,9 @@
-import { Schema } from '../schema';
 import { filteredJoin } from '../util';
 import { LocatedSchema, SchemaGatheredInfo, SchemaInputInfo, TypeGenerator } from './TypeGenerator';
 import { typeGenerator } from './type-generator';
 
 const collectionGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
-  const schema: Schema = locatedSchema.schema;
+  const schema = locatedSchema.schema;
   if (!schema.type || !schema.type.has('array') || !schema.items || Array.isArray(schema.items)) {
     return undefined;
   }
@@ -16,9 +15,13 @@ const collectionGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gather
   if (!inlinedElementType) {
     return undefined;
   }
-  const isSet: boolean = schema.uniqueItems ? true : false;
-  const prefix: string | undefined = (isSet) ? 'Set<' : undefined;
-  const suffix: string = (isSet) ? '>' : '[]';
+  const isSet = !!schema.uniqueItems;
+  const prefix = isSet
+    ? 'Set<'
+    : undefined;
+  const suffix = isSet
+    ? '>'
+    : '[]';
   return filteredJoin([prefix, inlinedElementType, suffix]);
 };
 

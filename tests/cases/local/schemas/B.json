@@ -1,0 +1,11 @@
+{
+  "$id": "https://abc.com/B#",
+  "type": "object",
+  "properties": {
+    "local": {
+      "$ref": "/A#Local"
+    }
+  },
+  "required": ["local"],
+  "additionalProperties": false
+}

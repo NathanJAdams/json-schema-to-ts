@@ -1,0 +1,16 @@
+{
+  "$id": "https://authority.com/B",
+  "type": "object",
+  "properties": {
+    "internal": {
+      "$ref": "#/$defs/Internal"
+    }
+  },
+  "additionalProperties": false,
+  "required": ["internal"],
+  "$defs": {
+    "Internal": {
+      "enum": [1, 2, 3]
+    }
+  }
+}

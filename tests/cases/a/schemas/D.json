@@ -1,0 +1,15 @@
+{
+  "$id": "https://abc.com/D",
+  "type": "object",
+  "properties": {
+    "xyz": {
+      "$ref": "#/$defs/XYZ"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "XYZ": {
+      "enum": [1, 2, 3]
+    }
+  }
+}

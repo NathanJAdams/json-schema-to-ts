@@ -3,7 +3,7 @@ import { LocatedSchema, SchemaGatheredInfo, SchemaInputInfo, TypeGenerator } fro
 import { typeGenerator } from './type-generator';
 
 const tupleGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
-  const schema: Schema = locatedSchema.schema;
+  const schema = locatedSchema.schema;
   if (!schema.type || !schema.type.has('array') || !schema.items || !Array.isArray(schema.items)) {
     return undefined;
   }
@@ -13,7 +13,7 @@ const tupleGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInf
       fileLocation: locatedSchema.fileLocation,
       schema: elementSchema
     };
-    const content: string | undefined = typeGenerator(elementLocatedSchema, gatheredInfo, inputInfo);
+    const content = typeGenerator(elementLocatedSchema, gatheredInfo, inputInfo);
     if (content) {
       elementTypesContent.push(content);
     }
@@ -21,7 +21,7 @@ const tupleGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInf
   if (schema.additionalItems !== false) {
     const lastTypeParts: string[] = [];
     lastTypeParts.push('...');
-    const valueType: string | undefined = (schema.additionalItems)
+    const valueType = (schema.additionalItems)
       ? typeGenerator({ fileLocation: locatedSchema.fileLocation, schema: schema.additionalItems }, gatheredInfo, inputInfo)
       : undefined;
     if (valueType) {
@@ -32,7 +32,7 @@ const tupleGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInf
     lastTypeParts.push('[]');
     elementTypesContent.push(lastTypeParts.join(''));
   }
-  const joined: string = elementTypesContent.join(', ');
+  const joined = elementTypesContent.join(', ');
   return `[${joined}]`;
 };
 

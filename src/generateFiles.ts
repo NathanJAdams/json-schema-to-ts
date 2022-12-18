@@ -1,28 +1,20 @@
 import { generateFileContents } from './generate';
-import { createOptions, AllOptions } from './options';
+import { createOptions } from './options';
 import { clean, read, write } from './files';
 import { parse } from './schema';
 import { Options } from '.';
 
-const main = async (options: Options): Promise<void> => {
-  console.error('Deprecated. `main(options)` will be removed in a subsequent release. Please use `generateFiles(options)` instead.');
-  return generateFiles(options);
-};
-
 const generateFiles = async (options: Options): Promise<void> => {
-  const allOptions: AllOptions = createOptions(options);
-  return Promise.resolve()
-    // TODO source files exist if required
-    .then(() => clean(allOptions))
-    .then(() => read(allOptions))
-    .then((fileContents) => parse(fileContents))
-    .then((fileSchemas) => generateFileContents(fileSchemas, allOptions))
-    // TODO check no extant files or can overwrite
-    .then((filesContent) => write(filesContent, allOptions))
-    .catch(console.error);
+  const allOptions = createOptions(options);
+  // TODO source files exist if required
+  await clean(allOptions);
+  const fileContents = await read(allOptions);
+  const parsedSchemas = parse(fileContents);
+  const generatedFileContents = generateFileContents(parsedSchemas, allOptions);
+  // TODO check no extant files or can overwrite
+  await write(generatedFileContents, allOptions);
 };
 
 export {
-  generateFiles,
-  main
+  generateFiles
 };
