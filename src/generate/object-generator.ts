@@ -1,29 +1,27 @@
 import { OptionalFieldPattern } from '../options';
 import { Schema } from '../schema';
 import { LocatedSchema, SchemaGatheredInfo, SchemaInputInfo, TypeGenerator } from './TypeGenerator';
-import { nameGenerator } from './name-generator';
 import { typeGenerator } from './type-generator';
 
 const objectGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
-  const schema: Schema = locatedSchema.schema;
+  const schema = locatedSchema.schema;
   if (!schema.type || !schema.type.has('object') || !(schema.properties || schema.additionalProperties)) {
     return undefined;
   }
   const lines: string[] = [];
   lines.push('{');
   if (schema.properties) {
-    schema.properties.forEach((propertySchema: Schema, name: string) => {
+    schema.properties.forEach((propertySchema: Schema, propertyName: string) => {
       const propertyLocatedSchema: LocatedSchema = {
         fileLocation: locatedSchema.fileLocation,
         schema: propertySchema
       };
-      const type: string | undefined = typeGenerator(propertyLocatedSchema, gatheredInfo, inputInfo);
+      const type = typeGenerator(propertyLocatedSchema, gatheredInfo, inputInfo);
       if (type) {
-        const isRequired: boolean = ((schema.required !== undefined) && schema.required.has(name));
-        const isQuestion: boolean = (!isRequired && inputInfo.options.ts.optionalFields == OptionalFieldPattern.QUESTION);
-        const isPipeUndefined: boolean = (!isRequired && inputInfo.options.ts.optionalFields == OptionalFieldPattern.PIPE_UNDEFINED);
+        const isRequired = ((schema.required !== undefined) && schema.required.has(propertyName));
+        const isQuestion = (!isRequired && inputInfo.options.ts.optionalFields == OptionalFieldPattern.QUESTION);
+        const isPipeUndefined = (!isRequired && inputInfo.options.ts.optionalFields == OptionalFieldPattern.PIPE_UNDEFINED);
         const lineParts: string[] = [];
-        const propertyName = nameGenerator(name);
         lineParts.push(propertyName);
         if (isQuestion) {
           lineParts.push('?');
@@ -42,7 +40,7 @@ const objectGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredIn
   } else {
     const lastLineParts: string[] = [];
     lastLineParts.push('} & Record<string, ');
-    const valueType: string | undefined = (schema.additionalProperties)
+    const valueType = (schema.additionalProperties)
       ? typeGenerator({ fileLocation: locatedSchema.fileLocation, schema: schema.additionalProperties }, gatheredInfo, inputInfo)
       : undefined;
     if (valueType) {

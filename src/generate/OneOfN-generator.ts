@@ -16,19 +16,19 @@ const OneOfNGenerator = (typeCount: number): string | undefined => {
   for (let i = 0; i < typeCount; i++) {
     typeArgs.push(`T${i}`);
   }
-  const pipeSepTypes: string = typeArgs.join(' | ');
+  const pipeSepTypes = typeArgs.join(' | ');
   const firstLine = `type OneOf_${typeCount}<${typeArgs.join(', ')}> = (${pipeSepTypes}) extends object`;
   const middleLines: string[] = [];
   const suppressCount = typeCount - 1;
   for (let i = 0; i < typeCount; i++) {
-    const temp: string = typeArgs[i];
+    const temp = typeArgs[i];
     typeArgs[i] = typeArgs[0];
     typeArgs[0] = temp;
     middleLines.push(`Suppress_${suppressCount}<${typeArgs.join(', ')}>`);
   }
   const middle = `? ${middleLines.join('\n| ')}`;
   const lastLine = `: ${pipeSepTypes};`;
-  const suppressType: string = SuppressNGenerator(suppressCount);
+  const suppressType = SuppressNGenerator(suppressCount);
   return [firstLine, middle, lastLine, suppressType].join('\n');
 };
 

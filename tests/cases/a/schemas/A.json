@@ -1,0 +1,26 @@
+{
+  "$id": "https://abc.com/A#",
+  "type": "object",
+  "properties": {
+    "b": {
+      "$ref": "https://abc.com/B"
+    },
+    "c": {
+      "$ref": "/abc/C"
+    },
+    "d": {
+      "$ref": "/D"
+    },
+    "fLocal": {
+      "$ref": "/a/b/c/E#F"
+    },
+    "fAbsoluteCorrect": {
+      "$ref": "https://abc.com/a/b/c/E#F"
+    },
+    "fAbsoluteIncorrect": {
+      "$ref": "https://incorrect.com/a/b/c/E#F"
+    }
+  },
+  "required": ["b", "c", "d", "fLocal", "fAbsoluteCorrect", "fAbsoluteIncorrect"],
+  "additionalProperties": false
+}

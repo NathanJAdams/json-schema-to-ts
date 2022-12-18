@@ -1,0 +1,15 @@
+{
+  "$id": "https://abc.com/A",
+  "type": "object",
+  "properties": {
+    "local": {
+      "$ref": "#/$defs/Local"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "Local": {
+      "enum": [1, 2, 3]
+    }
+  }
+}

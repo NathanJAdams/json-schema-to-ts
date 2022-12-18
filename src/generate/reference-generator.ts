@@ -1,87 +1,90 @@
 import { FileLocation } from '../files';
-import { Schema } from '../schema';
+import {
+  isAbsolute,
+  isRelative,
+  isLocal,
+  isAbsoluteSchemaId,
+  AbsoluteSchemaRef,
+  AbsoluteFragmentSchemaRef,
+  RelativeSchemaRef,
+  RelativeFragmentSchemaRef,
+  SchemaId,
+} from '../ids';
 import { References } from './References';
-import { LocatedSchema, SchemaGatheredInfo, SchemaInputInfo, TypeGenerator } from './TypeGenerator';
+import {
+  LocatedSchema,
+  SchemaGatheredInfo,
+  SchemaInputInfo,
+  TypeGenerator,
+} from './TypeGenerator';
 
 const referenceGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
-  const schema: Schema = locatedSchema.schema;
-  const ref: string | undefined = schema.$ref;
+  const schema = locatedSchema.schema;
+  const id = schema.$id;
+  const ref = schema.$ref;
   if (!ref) {
     return undefined;
   }
-  const localRef: string | undefined = createLocalRef(ref);
-  if (localRef) {
-    return localRef;
+  if (isLocal(ref)) {
+    return ref.fragment;
   }
-  const fullRef: string | undefined = createFullRef(ref, gatheredInfo, inputInfo);
-  if (fullRef) {
-    return fullRef;
+  const references = gatheredInfo.references;
+  const idFileLocations = inputInfo.idFileLocations;
+  if (isAbsolute(ref)) {
+    return createFromAbsoluteRef(references, idFileLocations, ref);
   }
-  const relativeRef: string | undefined = createRelativeRef(locatedSchema.fileLocation, ref, gatheredInfo, inputInfo);
-  if (relativeRef) {
-    return relativeRef;
+  if (isRelative(ref)) {
+    if (id && isAbsoluteSchemaId(id)) {
+      const absoluteRef = { authority: id.authority, ...ref };
+      return createFromAbsoluteRef(references, idFileLocations, absoluteRef);
+    } else {
+      return createFromRelativeRef(references, idFileLocations, ref);
+    }
   }
   return undefined;
 };
 
-const createLocalRef = (ref: string): string | undefined => {
-  const refNameMatch: RegExpMatchArray | null = ref.match(/^#?(?:\/definitions)?\/(.*)$/);
-  if (!refNameMatch) {
-    return undefined;
-  }
-  return refNameMatch[1];
-};
-
-const createFullRef = (ref: string, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
-  // root
-  const fileLocation: FileLocation | undefined = inputInfo.idFileLocations.get(ref);
+const createFromAbsoluteRef = (references: References, idFileLocations: Map<SchemaId, FileLocation>, ref: AbsoluteSchemaRef | AbsoluteFragmentSchemaRef): string | undefined => {
+  const fileLocation = idFileLocations.get(ref);
   if (fileLocation) {
-    addExternalReference(gatheredInfo.references, fileLocation);
-    return fileLocation.fileName;
+    return addExternalReference(
+      references,
+      fileLocation,
+      (ref as AbsoluteFragmentSchemaRef).fragment
+    );
   }
-  // inner
-  for (const [id, idFileLocation] of Array.from(inputInfo.idFileLocations)) {
-    if (ref.startsWith(id)) {
-      const rest: string = ref.substring(id.length);
-      const innerRef: string | undefined = createLocalRef(rest);
-      if (innerRef) {
-        addExternalReference(gatheredInfo.references, idFileLocation, innerRef);
-      }
-      return innerRef;
-    }
-  }
-  return undefined;
+  return createFromRelativeRef(references, idFileLocations, ref);
 };
 
-const createRelativeRef = (fileLocation: FileLocation, ref: string, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
-  for (const idFileLocation of Array.from(inputInfo.idFileLocations.values())) {
-    if (fileLocation.dir === idFileLocation.dir) {
-      if (ref.startsWith(idFileLocation.fileName)) {
-        const rest: string = ref.substring(idFileLocation.fileName.length);
-        // root
-        if (rest === '' || rest === '#') {
-          addExternalReference(gatheredInfo.references, idFileLocation);
-          return idFileLocation.fileName;
-        }
-        // inner
-        const innerRef: string | undefined = createLocalRef(rest);
-        if (innerRef) {
-          addExternalReference(gatheredInfo.references, idFileLocation, innerRef);
-          return innerRef;
-        }
-      }
-    }
-  }
-  return undefined;
+const createFromRelativeRef = (references: References, idFileLocations: Map<SchemaId, FileLocation>, ref: | AbsoluteSchemaRef | AbsoluteFragmentSchemaRef | RelativeSchemaRef | RelativeFragmentSchemaRef): string | undefined => {
+  const foundFileLocations = Array.from(idFileLocations.entries())
+    .filter(
+      ([schemaId, _]) =>
+        !isAbsoluteSchemaId(schemaId) ||
+        !isAbsolute(ref) ||
+        schemaId.authority === ref.authority
+    )
+    .filter(([schemaId, _]) => schemaId.folder === ref.folder)
+    .filter(([schemaId, _]) => schemaId.name === ref.name)
+    .map(([_, fileLocation]) => fileLocation);
+  return foundFileLocations && foundFileLocations.length === 1
+    ? addExternalReference(
+      references,
+      foundFileLocations[0],
+      (ref as RelativeFragmentSchemaRef).fragment
+    )
+    : undefined;
 };
 
-const addExternalReference = (references: References, fileLocation: FileLocation, importName?: string): void => {
-  let importNames: Set<string> | undefined = references.schema.get(fileLocation);
+const addExternalReference = (references: References, fileLocation: FileLocation, importName?: string): string => {
+  let importNames = references.schema.get(fileLocation);
   if (!importNames) {
     importNames = new Set();
     references.schema.set(fileLocation, importNames);
   }
-  importNames.add(importName || fileLocation.fileName);
+  const name = importName || fileLocation.fileName;
+  importNames.add(name);
+  return name;
 };
 
 export {

@@ -1,11 +1,11 @@
 {
   "name": "json-schema-typescript-generator",
-  "version": "1.5.14",
+  "version": "2.0.0",
   "author": {
     "name": "Nathan Adams",
     "url": "https://github.com/NathanJAdams"
   },
-  "license" : "MIT",
+  "license": "MIT",
   "homepage": "https://github.com/NathanJAdams/json-schema-to-ts",
   "repository": {
     "url": "https://github.com/NathanJAdams/json-schema-to-ts"
@@ -24,7 +24,7 @@
   "scripts": {
     "build": "yarn lint && yarn tsc",
     "lint": "eslint . --fix",
-    "test": "jest",
+    "test": "jest --silent=false",
     "tsc": "rimraf ./dist && tsc"
   },
   "dependencies": {
@@ -44,6 +44,6 @@
     "typescript": "4.6.4"
   },
   "resolutions": {
-    "path-parse":"1.0.7"
+    "path-parse": "1.0.7"
   }
 }

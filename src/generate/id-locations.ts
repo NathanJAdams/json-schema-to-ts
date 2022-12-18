@@ -1,10 +1,11 @@
 import { FileLocation } from '../files';
+import { SchemaId } from '../ids';
 import { Schema } from '../schema';
 
-const idLocations = (fileSchemas: Map<FileLocation, Schema>): Map<string, FileLocation> => {
-  let idLocations: Map<string, FileLocation> = new Map();
-  fileSchemas.forEach((schema: Schema, fileLocation: FileLocation) => {
-    const id: string | undefined = schema.$id;
+const idLocations = (fileSchemas: Map<FileLocation, Schema>): Map<SchemaId, FileLocation> => {
+  let idLocations: Map<SchemaId, FileLocation> = new Map();
+  fileSchemas.forEach((schema, fileLocation) => {
+    const id = schema.$id;
     if (id) {
       idLocations = idLocations.set(id, fileLocation);
     }

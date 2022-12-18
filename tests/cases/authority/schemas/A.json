@@ -1,0 +1,17 @@
+{
+  "$id": "https://authority.com/A#",
+  "type": "object",
+  "properties": {
+    "local": {
+      "$ref": "/B#Internal"
+    },
+    "correctAuthority": {
+      "$ref": "https://authority.com/B#Internal"
+    },
+    "incorrectAuthority": {
+      "$ref": "https://xyz.com/B#Internal"
+    }
+  },
+  "required": ["b", "c", "d", "local", "correctAuthority", "incorrectAuthority"],
+  "additionalProperties": false
+}
