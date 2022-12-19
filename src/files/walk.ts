@@ -5,7 +5,7 @@ const READ_OPTIONS: { withFileTypes: true } = { withFileTypes: true };
 
 type FilesGenerator = AsyncGenerator<string, void | FilesGenerator, void>;
 
-const files = async function* (dir: string, recursive: boolean): FilesGenerator {
+export const files = async function* (dir: string, recursive: boolean): FilesGenerator {
   const dirents = await fs.readdir(dir, READ_OPTIONS);
   for (const dirent of dirents) {
     const filePath = path.resolve(dir, dirent.name);
@@ -17,8 +17,4 @@ const files = async function* (dir: string, recursive: boolean): FilesGenerator 
       yield filePath;
     }
   }
-};
-
-export {
-  files
 };

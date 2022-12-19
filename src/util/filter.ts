@@ -1,8 +1,5 @@
-const filtered = (values: (string | undefined)[]): string[] => values.filter((_) => (_)) as string[];
+export const isDefined: <T>(_: T) => boolean = (_) => _ !== undefined;
 
-const filteredJoin = (values: (string | undefined)[], joiner?: string): string => values.filter((_) => (_)).join(joiner ? joiner : '');
+export const filtered = (values: (string | undefined)[]): string[] => values.filter(isDefined) as string[];
 
-export {
-  filtered,
-  filteredJoin
-};
+export const filteredJoin = (values: (string | undefined)[], joiner?: string): string => values.filter(isDefined).join(joiner ? joiner : '');

@@ -1,6 +1,6 @@
 import { SchemaPrimitive } from '.';
 
-interface RawSchema {
+export type RawSchema = {
   $id?: string;
   $ref?: string;
   type?: string | string[];
@@ -18,7 +18,3 @@ interface RawSchema {
   $defs?: Record<string, RawSchema>;
   definitions?: Record<string, RawSchema>;
 }
-
-export {
-  RawSchema
-};

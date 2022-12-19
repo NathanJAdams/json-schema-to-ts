@@ -8,7 +8,7 @@ const SuppressNGenerator = (suppressCount: number): string => {
   return `type ${suppressType} = T & { [P in ${excludeType}]?: never };`;
 };
 
-const OneOfNGenerator = (typeCount: number): string | undefined => {
+export const OneOfNGenerator = (typeCount: number): string | undefined => {
   if (!Number.isInteger(typeCount) || typeCount < 2) {
     return undefined;
   }
@@ -30,8 +30,4 @@ const OneOfNGenerator = (typeCount: number): string | undefined => {
   const lastLine = `: ${pipeSepTypes};`;
   const suppressType = SuppressNGenerator(suppressCount);
   return [firstLine, middle, lastLine, suppressType].join('\n');
-};
-
-export {
-  OneOfNGenerator
 };

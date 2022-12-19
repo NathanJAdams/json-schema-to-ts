@@ -4,7 +4,7 @@ import { AllOptions } from '../options';
 import { FileLocation } from './FileLocation';
 import { files } from './walk';
 
-const read = async (options: AllOptions): Promise<Map<FileLocation, string>> => {
+export const read = async (options: AllOptions): Promise<Map<FileLocation, string>> => {
   const sourceDir = options.files.source.dir;
   const encoding = options.files.source.encoding;
   const recursive = options.files.source.recursive;
@@ -30,8 +30,4 @@ const toFileLocation = (file: string): FileLocation => {
     fileName,
     fileNameWithExt,
   };
-};
-
-export {
-  read
 };

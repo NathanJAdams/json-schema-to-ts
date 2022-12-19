@@ -1,0 +1,15 @@
+{
+  "$id": "https://abc.com/MyTuplePlus#",
+  "type": "array",
+  "items": [
+    {
+      "type": "boolean"
+    },
+    {
+      "type": "string"
+    }
+  ],
+  "additionalItems": {
+    "type": "number"
+  }
+}

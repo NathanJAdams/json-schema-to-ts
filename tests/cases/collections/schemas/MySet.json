@@ -1,0 +1,8 @@
+{
+  "$id": "https://abc.com/MySet",
+  "type": "array",
+  "items": {
+    "type": "number"
+  },
+  "uniqueItems": true
+}

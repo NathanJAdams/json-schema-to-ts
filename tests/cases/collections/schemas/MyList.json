@@ -1,0 +1,7 @@
+{
+  "$id": "https://abc.com/MyList",
+  "type": "array",
+  "items": {
+    "type": "number"
+  }
+}

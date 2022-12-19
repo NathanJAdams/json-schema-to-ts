@@ -1,19 +1,16 @@
 import { Schema } from '../schema';
 import { filtered } from '../util';
-import { LocatedSchema, SchemaGatheredInfo, SchemaInputInfo, TypeGenerator } from './TypeGenerator';
+import { LocatedSchema, SchemaGatheredInfo, SchemaInputInfo, TypeGenerator, located } from './TypeGenerator';
 import { typeGenerator } from './type-generator';
 
-const anyOfGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
+export const anyOfGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
   const schema = locatedSchema.schema;
   if (!schema.anyOf || schema.anyOf.length === 0) {
     return undefined;
   }
   const lines: (string | undefined)[] = [];
   schema.anyOf.forEach((elementSchema: Schema) => {
-    const elementLocatedSchema: LocatedSchema = {
-      fileLocation: locatedSchema.fileLocation,
-      schema: elementSchema
-    };
+    const elementLocatedSchema = located(elementSchema, locatedSchema);
     const elementContent = typeGenerator(elementLocatedSchema, gatheredInfo, inputInfo);
     lines.push(elementContent);
   });
@@ -25,8 +22,4 @@ const anyOfGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInf
   } else {
     return '(' + filteredLines.join('\n| ') + ')';
   }
-};
-
-export {
-  anyOfGenerator
 };

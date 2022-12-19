@@ -1,18 +1,18 @@
 import { PartialDeep } from './types';
 
-enum UntypedType {
+export enum UntypedType {
   ANY = 'any',
   NEVER = 'never',
   UNDEFINED = 'undefined',
   UNKNOWN = 'unknown'
 }
 
-enum OptionalFieldPattern {
+export enum OptionalFieldPattern {
   QUESTION = 'fieldName?',
   PIPE_UNDEFINED = 'Type | undefined'
 }
 
-interface AllOptions {
+export type AllOptions = {
   files: {
     cwd?: string;
     source: {
@@ -32,9 +32,9 @@ interface AllOptions {
   };
 }
 
-type Options = PartialDeep<AllOptions>;
+export type Options = PartialDeep<AllOptions>;
 
-const DEFAULT_OPTIONS: AllOptions = {
+export const DEFAULT_OPTIONS: AllOptions = {
   files: {
     source: {
       dir: 'src/schemas',
@@ -53,7 +53,7 @@ const DEFAULT_OPTIONS: AllOptions = {
   }
 };
 
-const createOptions = (options: PartialDeep<AllOptions>): AllOptions => {
+export const createOptions = (options: PartialDeep<AllOptions>): AllOptions => {
   return {
     files: {
       ...DEFAULT_OPTIONS.files,
@@ -72,13 +72,4 @@ const createOptions = (options: PartialDeep<AllOptions>): AllOptions => {
       ...options.ts
     }
   };
-};
-
-export {
-  OptionalFieldPattern,
-  UntypedType,
-  AllOptions,
-  Options,
-  DEFAULT_OPTIONS,
-  createOptions
 };

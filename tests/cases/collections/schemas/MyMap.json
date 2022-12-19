@@ -1,0 +1,23 @@
+{
+  "$id": "https://abc.com/MyMap#",
+  "type": "array",
+  "items": [
+    {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "key",
+        "value"
+      ]
+    }
+  ],
+  "additionalItems": false,
+  "uniqueItems": true
+}
