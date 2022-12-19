@@ -1,7 +1,9 @@
 # json-schema-typescript-generator
+
 Generate typescript files from json schema files
 
 ## Contents
+
 [Install](#Install)
 
 [Usage](#Usage)
@@ -12,8 +14,8 @@ Generate typescript files from json schema files
 
 [Approach](#Approach)
 
-
 ## Install
+
 Install via one of the commands
 
 ```sh
@@ -22,6 +24,7 @@ yarn add json-schema-typescript-generator -D
 ```
 
 ## Usage
+
 To generate .ts files, invoke the `generateFiles` function with an `Options` object like so
 
 ```ts
@@ -32,6 +35,7 @@ await generateFiles(options);
 ```
 
 The [Options](src/options.ts) object is defined as follows:
+
 ```ts
 {
   files: {
@@ -40,17 +44,17 @@ The [Options](src/options.ts) object is defined as follows:
       dir: string;
       encoding: BufferEncoding;
       recursive: boolean;
-    };
+    }
     destination: {
       dir: string;
       preClean: boolean;
       indexFiles: boolean;
-    };
-  };
+    }
+  }
   ts: {
     optionalFields: OptionalFieldPattern;
     untyped: UntypedType;
-  };
+  }
 }
 ```
 
@@ -81,7 +85,7 @@ All options are optional and fall back to their defaults if not given, which are
 The option
 
 ```ts
-options.files.destination.preClean
+options.files.destination.preClean;
 ```
 
 defines whether the destination folder will be deleted before generating typescript files.<br><br>
@@ -89,7 +93,7 @@ defines whether the destination folder will be deleted before generating typescr
 The option
 
 ```ts
-options.files.destination.indexFiles
+options.files.destination.indexFiles;
 ```
 
 defines whether index.ts files will be generated in each destination folder.<br><br>
@@ -97,16 +101,15 @@ defines whether index.ts files will be generated in each destination folder.<br>
 Note that the folders given by the options
 
 ```ts
-options.files.source.dir
-options.files.destination.dir
+options.files.source.dir;
+options.files.destination.dir;
 ```
 
 will be resolved relative to the folder given by the option
 
 ```ts
-options.files.cwd
+options.files.cwd;
 ```
-
 
 ## Typescript
 
@@ -117,13 +120,13 @@ There are 2 options which define the style of code generated
 The option
 
 ```ts
-options.ts.optionalFields
+options.ts.optionalFields;
 ```
 
 defines how optional fields are represented and can take 1 of 2 values:
 
 ```ts
-OptionalFieldPattern.QUESTION
+OptionalFieldPattern.QUESTION;
 
 type Example = {
   a?: string;
@@ -133,11 +136,11 @@ type Example = {
 or
 
 ```ts
-OptionalFieldPattern.PIPE_UNDEFINED
+OptionalFieldPattern.PIPE_UNDEFINED;
 
 type Example = {
   a: string | undefined;
-}
+};
 ```
 
 ### `UntypedType`
@@ -145,68 +148,68 @@ type Example = {
 The option
 
 ```ts
-options.ts.untyped
+options.ts.untyped;
 ```
 
 defines the fallback type used for types that failed to be generated, eg. perhaps the schema was empty, or an id was missing or a typo was made in a $ref entry etc. It can take 1 of 4 values:
 
 ```ts
-UntypedType.ANY
+UntypedType.ANY;
 
 type Example = {
-  a: any
-}
+  a: any;
+};
 ```
 
 or
 
 ```ts
-UntypedType.NEVER
+UntypedType.NEVER;
 
 type Example = {
-  a: never
-}
+  a: never;
+};
 ```
 
 or
 
 ```ts
-UntypedType.UNDEFINED
+UntypedType.UNDEFINED;
 
 type Example = {
-  a: undefined
-}
+  a: undefined;
+};
 ```
 
 or
 
 ```ts
-UntypedType.UNKNOWN
+UntypedType.UNKNOWN;
 
 type Example = {
-  a: unknown
-}
+  a: unknown;
+};
 ```
-
 
 ## JSONSchema
+
 Support for properties defined in the JSON Schema are as follows:
 
-| Key | Support | Notes
-|---------|-----|------
-| $id     | ✔
-| $schema | ✘ | Action in TODO to support specific schema versions
-| $ref | ✔ | local definition<br>absolute reference to root/inner definition<br>relative reference to root/inner definition
-| $defs | ✔ | Combined with `definitions`
-| const | ✔ | null<br>booleans<br>numbers<br>strings
-| enum | ✔ | null<br>booleans<br>numbers<br>strings
-| type | ✔ | "null"<br>"boolean"<br>"integer"<br>"number"<br>"string"<br>"array"<br>"object"<br><br>Or an array of the above
-| number properties | ✘ | multipleOf<br>minimum<br>maximum<br>exclusiveMinimum<br>exclusiveMaximum<br><br>No typescript support for `multipleOf`<br>[Open question on GitHub about number ranges](https://github.com/Microsoft/TypeScript/issues/15480)
-| string properties | ✘ | minLength<br>maxLength<br>pattern<br>format<br><br>[Typescript support for string patterns and formats in v4.1](https://stackoverflow.com/questions/51445767/how-to-define-a-regex-matched-string-type-in-typescript)<br>Typescript's implementation produces a union of every possible combination so is not suitable for patterns or formats
-| array properties | ✔ | items<br>uniqueItems<br>additionalItems<br><br>`T[]` - Array if `items` is a schema and `uniqueItems=false`<br>`Set<T>` - Set if `items` is a schema and `uniqueItems=true`<br>`[T, U, V]` - Tuple if `items` is an array
-| array properties | ✘ | contains<br>minItems<br>maxItems<br><br>array (and possibly tuple) min length: `type MinLengthArray<T> = [T, T, ...T[]];` Although no typescript support for a `Set<T>` of specific size<br>No typescript support for contains
-| object properties | ✔ | properties<br>additionalProperties
-| combinations | ✔ | allOf<br>anyOf<br>oneOf<br><br>If oneOf is used, OneOf_n types are dynamically generated in files that need them, for arrays with many items these types can get large and will be updated if typescript adds native support
+| Key               | Support | Notes                                                                                                                                                                                                                                                                                                                                          |
+| ----------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| $id               | ✔       |
+| $schema           | ✘       | Action in TODO to support specific schema versions                                                                                                                                                                                                                                                                                             |
+| $ref              | ✔       | local definition<br>absolute reference to root/inner definition<br>relative reference to root/inner definition                                                                                                                                                                                                                                 |
+| $defs             | ✔       | Combined with `definitions`                                                                                                                                                                                                                                                                                                                    |
+| const             | ✔       | null<br>booleans<br>numbers<br>strings                                                                                                                                                                                                                                                                                                         |
+| enum              | ✔       | null<br>booleans<br>numbers<br>strings                                                                                                                                                                                                                                                                                                         |
+| type              | ✔       | "null"<br>"boolean"<br>"integer"<br>"number"<br>"string"<br>"array"<br>"object"<br><br>Or an array of the above                                                                                                                                                                                                                                |
+| number properties | ✘       | multipleOf<br>minimum<br>maximum<br>exclusiveMinimum<br>exclusiveMaximum<br><br>No typescript support for `multipleOf`<br>[Open question on GitHub about number ranges](https://github.com/Microsoft/TypeScript/issues/15480)                                                                                                                  |
+| string properties | ✘       | minLength<br>maxLength<br>pattern<br>format<br><br>[Typescript support for string patterns and formats in v4.1](https://stackoverflow.com/questions/51445767/how-to-define-a-regex-matched-string-type-in-typescript)<br>Typescript's implementation produces a union of every possible combination so is not suitable for patterns or formats |
+| array properties  | ✔       | items<br>uniqueItems<br>additionalItems<br><br>`T[]` - Array if `items` is a schema and `uniqueItems=false`<br>`Map<K, V>` - Map if `items` is a schema, `uniqueItems=true`, `additionalItems=false` and `items` has no other properties<br>`Set<T>` - Set if `items` is a schema, `uniqueItems=true` and is not a Map<br>`[T, U, V]` - Tuple if `items` is an array                                                                                                                      |
+| array properties  | ✘       | contains<br>minItems<br>maxItems<br><br>array (and possibly tuple) min length: `type MinLengthArray<T> = [T, T, ...T[]];` Although no typescript support for a `Set<T>` of specific size<br>No typescript support for contains                                                                                                                 |
+| object properties | ✔       | properties<br>additionalProperties                                                                                                                                                                                                                                                                                                             |
+| combinations      | ✔       | allOf<br>anyOf<br>oneOf<br><br>If oneOf is used, OneOf_n types are dynamically generated in files that need them, for arrays with many items these types can get large and will be updated if typescript adds native support                                                                                                                   |
 
 ## Approach
 
@@ -236,9 +239,7 @@ Given the following schema in a file called `A.json`
 Invoking the generator will generate a file `A.ts` containing:
 
 ```ts
-export type A = BOOL
-& (null | 'tuv' | 'xyz')
-& number;
+export type A = BOOL & (null | "tuv" | "xyz") & number;
 
 export type BOOL = boolean;
 ```
