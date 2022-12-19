@@ -18,7 +18,7 @@ import {
   TypeGenerator,
 } from './TypeGenerator';
 
-const referenceGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
+export const referenceGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
   const schema = locatedSchema.schema;
   const id = schema.$id;
   const ref = schema.$ref;
@@ -85,8 +85,4 @@ const addExternalReference = (references: References, fileLocation: FileLocation
   const name = importName || fileLocation.fileName;
   importNames.add(name);
   return name;
-};
-
-export {
-  referenceGenerator
 };

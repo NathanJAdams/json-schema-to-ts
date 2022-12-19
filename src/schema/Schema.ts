@@ -1,29 +1,39 @@
 import { SchemaId, SchemaRef } from '../ids';
 
-type SchemaPrimitive = null | boolean | number | string;
+const BASIC_TYPES = new Set(['string', 'number', 'integer', 'object', 'array', 'boolean', 'null']);
 
-type SchemaEnum = Set<SchemaPrimitive>;
+export type SchemaBasicType = 'string' | 'number' | 'integer' | 'object' | 'array' | 'boolean' | 'null';
 
-interface Schema {
+export type SchemaType = Set<SchemaBasicType>;
+
+export type SchemaPrimitive = null | boolean | number | string;
+
+export type SchemaEnum = Set<SchemaPrimitive>;
+
+export type SchemaObject = {
+  properties: Map<string, Schema>;
+  required: Set<string>;
+  additionalProperties?: Schema;
+}
+
+export type SchemaCollection = {
+  items: Schema | Schema[];
+  additionalItems?: Schema;
+  uniqueItems?: boolean;
+};
+
+export type Schema = {
   $id?: SchemaId;
   $ref?: SchemaRef;
-  type?: Set<string>;
-  const?: null | boolean | number | string;
+  type?: SchemaType;
+  const?: SchemaPrimitive;
   enum?: SchemaEnum;
-  items?: Schema | Schema[];
-  uniqueItems?: boolean;
-  additionalItems?: false | Schema;
+  collection?: SchemaCollection;
+  object?: SchemaObject;
   allOf?: Schema[];
   anyOf?: Schema[];
   oneOf?: Schema[];
-  properties?: Map<string, Schema>;
-  additionalProperties?: false | Schema;
-  required?: Set<string>;
   definitions?: Map<string, Schema>;
 }
 
-export {
-  SchemaPrimitive,
-  SchemaEnum,
-  Schema
-};
+export const isBasicType = (type: string): type is SchemaBasicType => BASIC_TYPES.has(type);

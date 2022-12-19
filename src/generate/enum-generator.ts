@@ -1,24 +1,20 @@
 import { SchemaPrimitive } from '../schema';
 import { LocatedSchema, TypeGenerator } from './TypeGenerator';
 
-const enumGenerator: TypeGenerator = (locatedSchema: LocatedSchema): string | undefined => {
-  const schema = locatedSchema.schema;
-  if (!schema.enum || schema.enum.size === 0) {
+export const enumGenerator: TypeGenerator = (locatedSchema: LocatedSchema): string | undefined => {
+  const _enum = locatedSchema.schema.enum;
+  if (!_enum || _enum.size === 0) {
     return undefined;
   }
   const enumTypes: string[] = [];
-  schema.enum.forEach((primitive: SchemaPrimitive) => {
+  _enum.forEach((primitive: SchemaPrimitive) => {
     const value = (typeof primitive === 'string')
       ? `'${primitive}'`
       : `${primitive}`;
     enumTypes.push(value);
   });
   const combined = enumTypes.join(' | ');
-  return (schema.enum.size === 1)
+  return (_enum.size === 1)
     ? combined
     : `(${combined})`;
-};
-
-export {
-  enumGenerator
 };

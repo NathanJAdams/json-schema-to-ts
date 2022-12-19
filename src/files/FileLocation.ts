@@ -1,9 +1,5 @@
-interface FileLocation {
+export type FileLocation = {
   dir: string;
   fileName: string;
   fileNameWithExt: string;
 }
-
-export {
-  FileLocation
-};

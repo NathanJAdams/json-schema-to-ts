@@ -1,30 +1,83 @@
-import { filteredJoin } from '../util';
-import { LocatedSchema, SchemaGatheredInfo, SchemaInputInfo, TypeGenerator } from './TypeGenerator';
+import { LocatedSchema, SchemaGatheredInfo, SchemaInputInfo, TypeGenerator, located } from './TypeGenerator';
 import { typeGenerator } from './type-generator';
+import { Schema, SchemaCollection } from '../schema';
+import { filteredJoin } from '../util';
 
-const collectionGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
+export const collectionGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
   const schema = locatedSchema.schema;
-  if (!schema.type || !schema.type.has('array') || !schema.items || Array.isArray(schema.items)) {
+  if (!schema.type || !schema.type.has('array') || !schema.collection) {
     return undefined;
   }
-  const itemsLocatedSchema: LocatedSchema = {
-    fileLocation: locatedSchema.fileLocation,
-    schema: schema.items
-  };
-  const inlinedElementType = typeGenerator(itemsLocatedSchema, gatheredInfo, inputInfo);
-  if (!inlinedElementType) {
-    return undefined;
+  const collection = schema.collection;
+  const collectionItems = collection.items;
+  if (Array.isArray(collectionItems)) {
+    const collectionProperties = collectionItems[0].object?.properties;
+    const key = collectionProperties?.get('key');
+    const value = collectionProperties?.get('value');
+    if (isMap(collection) && key && value) {
+      return mapGenerator(key, value, locatedSchema, gatheredInfo, inputInfo);
+    } else {
+      return tupleGenerator(collectionItems, collection.additionalItems, locatedSchema, gatheredInfo, inputInfo);
+    }
+  } else {
+    if (collection.uniqueItems) {
+      return setGenerator(collectionItems, locatedSchema, gatheredInfo, inputInfo);
+    } else {
+      return arrayGenerator(collectionItems, locatedSchema, gatheredInfo, inputInfo);
+    }
   }
-  const isSet = !!schema.uniqueItems;
-  const prefix = isSet
-    ? 'Set<'
-    : undefined;
-  const suffix = isSet
-    ? '>'
-    : '[]';
-  return filteredJoin([prefix, inlinedElementType, suffix]);
 };
 
-export {
-  collectionGenerator
+const isMap = (collection: SchemaCollection): boolean => {
+  // collection
+  if (!collection.uniqueItems || !Array.isArray(collection.items) || collection.items.length !== 1 || collection.additionalItems) {
+    return false;
+  }
+  const element = collection.items[0];
+  // element
+  if (!element.object || element.const || element.$ref || element.enum || element.collection || element.allOf || element.anyOf || element.oneOf) {
+    return false;
+  }
+  const object = element.object;
+  return (object.properties.size === 2)
+    && (object.properties.has('key'))
+    && (object.properties.has('value'))
+    && (object.additionalProperties === undefined)
+    && (object.required.size === 2)
+    && (object.required.has('key'))
+    && (object.required.has('value'));
+};
+
+const arrayGenerator = (items: Schema, locatedSchema: LocatedSchema, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
+  const itemsLocatedSchema = located(items, locatedSchema);
+  const itemsType = typeGenerator(itemsLocatedSchema, gatheredInfo, inputInfo);
+  return `${itemsType}[]`;
+};
+
+const setGenerator = (items: Schema, locatedSchema: LocatedSchema, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
+  const itemsLocatedSchema = located(items, locatedSchema);
+  const itemsType = typeGenerator(itemsLocatedSchema, gatheredInfo, inputInfo);
+  return `Set<${itemsType}>`;
+};
+
+const mapGenerator = (key: Schema, value: Schema, locatedSchema: LocatedSchema, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
+  const keyLocatedSchema = located(key, locatedSchema);
+  const valueLocatedSchema = located(value, locatedSchema);
+  const keyType = typeGenerator(keyLocatedSchema, gatheredInfo, inputInfo);
+  const valueType = typeGenerator(valueLocatedSchema, gatheredInfo, inputInfo);
+  return `Map<${keyType}, ${valueType}>`;
+};
+
+const tupleGenerator = (items: Schema[], additionalItems: Schema | undefined, locatedSchema: LocatedSchema, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
+  const itemTypes = items
+    .map((item) => located(item, locatedSchema))
+    .map((itemLocatedSchema) => typeGenerator(itemLocatedSchema, gatheredInfo, inputInfo));
+  const additionalType = (additionalItems)
+    ? typeGenerator(located(additionalItems, locatedSchema), gatheredInfo, inputInfo)
+    : undefined;
+  const itemsCsv = filteredJoin(itemTypes, ', ');
+  const combinedItemsCsv = additionalType
+    ? `${itemsCsv}, ...${additionalType}[]`
+    : `${itemsCsv}`;
+  return `[${combinedItemsCsv}]`;
 };

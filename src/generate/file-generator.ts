@@ -8,7 +8,7 @@ import { nameGenerator } from './name-generator';
 import { typeGenerator } from './type-generator';
 import { LocatedSchema, SchemaGatheredInfo, SchemaInputInfo } from './TypeGenerator';
 
-const fileGenerator = (locatedSchema: LocatedSchema, inputInfo: SchemaInputInfo): string => {
+export const fileGenerator = (locatedSchema: LocatedSchema, inputInfo: SchemaInputInfo): string => {
   const references: References = {
     schema: new Map()
   };
@@ -18,7 +18,7 @@ const fileGenerator = (locatedSchema: LocatedSchema, inputInfo: SchemaInputInfo)
     oneOfTypes: new Set()
   };
   const schemaContent = schemaContentGenerator(locatedSchema, gatheredInfo, inputInfo);
-  const definitions = mapGenerator(
+  const definitions = schemaMapGenerator(
     locatedSchema.fileLocation,
     locatedSchema.schema.definitions,
     gatheredInfo,
@@ -79,9 +79,9 @@ const namedGenerator = (fileLocation: FileLocation, gatheredInfo: SchemaGathered
       ...gatheredInfo,
       namedSchemas: new Map()
     };
-    const mapContent = mapGenerator(fileLocation, map, gatheredInfo, inputInfo);
-    if (mapContent) {
-      content.push(mapContent);
+    const schemaMapContent = schemaMapGenerator(fileLocation, map, gatheredInfo, inputInfo);
+    if (schemaMapContent) {
+      content.push(schemaMapContent);
     } else {
       return content.length === 0
         ? undefined
@@ -104,7 +104,7 @@ const oneOfTypesGenerator = (typeCounts: Set<number>): string | undefined => {
   return oneOfTypeLines.join('\n');
 };
 
-const mapGenerator = (fileLocation: FileLocation, map: Map<string, Schema> | undefined, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
+const schemaMapGenerator = (fileLocation: FileLocation, map: Map<string, Schema> | undefined, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
   if (!map || map.size === 0) {
     return undefined;
   }
@@ -126,7 +126,3 @@ const tsPathGenerator = (relativePath: string): string =>
   relativePath.startsWith('.')
     ? relativePath
     : '.' + path.sep + relativePath;
-
-export {
-  fileGenerator
-};

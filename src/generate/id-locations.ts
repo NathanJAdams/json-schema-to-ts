@@ -2,7 +2,7 @@ import { FileLocation } from '../files';
 import { SchemaId } from '../ids';
 import { Schema } from '../schema';
 
-const idLocations = (fileSchemas: Map<FileLocation, Schema>): Map<SchemaId, FileLocation> => {
+export const idLocations = (fileSchemas: Map<FileLocation, Schema>): Map<SchemaId, FileLocation> => {
   let idLocations: Map<SchemaId, FileLocation> = new Map();
   fileSchemas.forEach((schema, fileLocation) => {
     const id = schema.$id;
@@ -11,8 +11,4 @@ const idLocations = (fileSchemas: Map<FileLocation, Schema>): Map<SchemaId, File
     }
   });
   return idLocations;
-};
-
-export {
-  idLocations
 };

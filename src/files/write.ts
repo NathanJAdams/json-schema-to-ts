@@ -3,7 +3,7 @@ import * as path from 'path';
 import { AllOptions } from '../options';
 import { FileLocation } from './FileLocation';
 
-const write = async (filesContent: Map<FileLocation, string>, options: AllOptions): Promise<void> => {
+export const write = async (filesContent: Map<FileLocation, string>, options: AllOptions): Promise<void> => {
   const promises: Promise<void>[] = [];
   const cwd = options.files.cwd || process.cwd();
   const rootSourceDir = path.resolve(cwd, options.files.source.dir);
@@ -49,8 +49,4 @@ const writeContent = async (content: string, absoluteFile: string): Promise<void
 const mkdirs = async (absoluteFile: string): Promise<void> => {
   const parentDir = absoluteFile.substring(0, absoluteFile.lastIndexOf(path.sep));
   await fs.mkdir(parentDir, { recursive: true });
-};
-
-export {
-  write
 };
