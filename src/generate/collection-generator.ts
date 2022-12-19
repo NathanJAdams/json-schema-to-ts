@@ -11,17 +11,17 @@ export const collectionGenerator: TypeGenerator = (locatedSchema: LocatedSchema,
   const collection = schema.collection;
   const collectionItems = collection.items;
   if (Array.isArray(collectionItems)) {
-    const collectionProperties = collectionItems[0].object?.properties;
-    const key = collectionProperties?.get('key');
-    const value = collectionProperties?.get('value');
-    if (isMap(collection) && key && value) {
-      return mapGenerator(key, value, locatedSchema, gatheredInfo, inputInfo);
-    } else {
-      return tupleGenerator(collectionItems, collection.additionalItems, locatedSchema, gatheredInfo, inputInfo);
-    }
+    return tupleGenerator(collectionItems, collection.additionalItems, locatedSchema, gatheredInfo, inputInfo);
   } else {
     if (collection.uniqueItems) {
-      return setGenerator(collectionItems, locatedSchema, gatheredInfo, inputInfo);
+      const collectionProperties = collectionItems.object?.properties;
+      const key = collectionProperties?.get('key');
+      const value = collectionProperties?.get('value');
+      if (isMap(collection) && key && value) {
+        return mapGenerator(key, value, locatedSchema, gatheredInfo, inputInfo);
+      } else {
+        return setGenerator(collectionItems, locatedSchema, gatheredInfo, inputInfo);
+      }
     } else {
       return arrayGenerator(collectionItems, locatedSchema, gatheredInfo, inputInfo);
     }
@@ -29,12 +29,10 @@ export const collectionGenerator: TypeGenerator = (locatedSchema: LocatedSchema,
 };
 
 const isMap = (collection: SchemaCollection): boolean => {
-  // collection
-  if (!collection.uniqueItems || !Array.isArray(collection.items) || collection.items.length !== 1 || collection.additionalItems) {
+  if (!collection.uniqueItems || Array.isArray(collection.items) || collection.additionalItems) {
     return false;
   }
-  const element = collection.items[0];
-  // element
+  const element = collection.items;
   if (!element.object || element.const || element.$ref || element.enum || element.collection || element.allOf || element.anyOf || element.oneOf) {
     return false;
   }
