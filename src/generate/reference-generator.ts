@@ -23,7 +23,7 @@ export const referenceGenerator: TypeGenerator = (locatedSchema: LocatedSchema, 
   const id = schema.$id;
   const ref = schema.$ref;
   if (!ref) {
-    return undefined;
+    return;
   }
   if (isLocal(ref)) {
     return ref.fragment;
@@ -41,7 +41,7 @@ export const referenceGenerator: TypeGenerator = (locatedSchema: LocatedSchema, 
       return createFromRelativeRef(references, idFileLocations, ref);
     }
   }
-  return undefined;
+  return;
 };
 
 const createFromAbsoluteRef = (references: References, idFileLocations: Map<SchemaId, FileLocation>, ref: AbsoluteSchemaRef | AbsoluteFragmentSchemaRef): string | undefined => {

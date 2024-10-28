@@ -11,7 +11,7 @@ PRIMITIVE_TYPES.set('string', 'string');
 export const basicTypeGenerator: TypeGenerator = (locatedSchema: LocatedSchema, _gatheredInfo: SchemaGatheredInfo, _inputInfo: SchemaInputInfo): string | undefined => {
   const schemaTypes = locatedSchema.schema.type;
   if (!schemaTypes || schemaTypes.size === 0) {
-    return undefined;
+    return;
   }
   const tsTypesSet: Set<string> = new Set();
   Array.from(PRIMITIVE_TYPES.entries())
@@ -20,7 +20,7 @@ export const basicTypeGenerator: TypeGenerator = (locatedSchema: LocatedSchema, 
     .forEach((tsType) => tsTypesSet.add(tsType));
   const tsTypes: string[] = Array.from(tsTypesSet);
   if (tsTypes.length === 0) {
-    return undefined;
+    return;
   }
   if (tsTypes.length === 1) {
     return tsTypes[0];

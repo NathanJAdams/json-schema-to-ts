@@ -5,7 +5,7 @@ import { typeGenerator } from './type-generator';
 export const objectGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
   const schema = locatedSchema.schema;
   if (!schema.type || !schema.type.has('object') || !(schema.object)) {
-    return undefined;
+    return;
   }
   const { properties, required, additionalProperties } = schema.object;
   const lines: string[] = [];
