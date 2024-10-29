@@ -64,7 +64,7 @@ program
       },
       ts: {
         optionalFields: OptionalFieldPattern[opts.optionalFieldPattern as keyof typeof OptionalFieldPattern],
-        untyped: UntypedType[opts.untypedType as keyof typeof UntypedType],
+        untyped: UntypedType[opts.untypedType as keyof typeof UntypedType]
       }
     };
     await generateFiles(options);
