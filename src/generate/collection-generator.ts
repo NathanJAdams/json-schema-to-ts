@@ -6,7 +6,7 @@ import { filteredJoin } from '../util';
 export const collectionGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
   const schema = locatedSchema.schema;
   if (!schema.type || !schema.type.has('array') || !schema.collection) {
-    return undefined;
+    return;
   }
   const collection = schema.collection;
   const collectionItems = collection.items;

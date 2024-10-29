@@ -6,7 +6,7 @@ import { filtered } from '../util';
 export const allOfGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
   const schema = locatedSchema.schema;
   if (!schema.allOf || schema.allOf.length === 0) {
-    return undefined;
+    return;
   }
   const lines: (string | undefined)[] = [];
   schema.allOf.forEach((elementSchema: Schema) => {
@@ -16,7 +16,7 @@ export const allOfGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gath
   });
   const filteredLines: string[] = filtered(lines);
   if (filteredLines.length === 0) {
-    return undefined;
+    return;
   }
   return filteredLines.join('\n& ');
 };

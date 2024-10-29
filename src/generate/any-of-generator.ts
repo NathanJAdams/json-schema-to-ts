@@ -6,7 +6,7 @@ import { typeGenerator } from './type-generator';
 export const anyOfGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
   const schema = locatedSchema.schema;
   if (!schema.anyOf || schema.anyOf.length === 0) {
-    return undefined;
+    return;
   }
   const lines: (string | undefined)[] = [];
   schema.anyOf.forEach((elementSchema: Schema) => {
@@ -16,7 +16,7 @@ export const anyOfGenerator: TypeGenerator = (locatedSchema: LocatedSchema, gath
   });
   const filteredLines: string[] = filtered(lines);
   if (filteredLines.length === 0) {
-    return undefined;
+    return;
   } else if (filteredLines.length === 1) {
     return filteredLines[0];
   } else {

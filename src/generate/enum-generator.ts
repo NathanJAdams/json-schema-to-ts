@@ -4,7 +4,7 @@ import { LocatedSchema, TypeGenerator } from './TypeGenerator';
 export const enumGenerator: TypeGenerator = (locatedSchema: LocatedSchema): string | undefined => {
   const _enum = locatedSchema.schema.enum;
   if (!_enum || _enum.size === 0) {
-    return undefined;
+    return;
   }
   const enumTypes: string[] = [];
   _enum.forEach((primitive: SchemaPrimitive) => {

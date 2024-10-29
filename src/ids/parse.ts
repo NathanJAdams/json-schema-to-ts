@@ -9,7 +9,7 @@ type SchemaPath = {
 const parseAuthority = (url: string): string | undefined => {
   const protocolMatch = url.match(/^([^:/]+:\/\/)/);
   if (!protocolMatch) {
-    return undefined;
+    return;
   }
   const protocol = protocolMatch[1];
   const withoutProtocol = url.substring(protocol.length);
@@ -24,7 +24,7 @@ const parseAuthority = (url: string): string | undefined => {
 const parsePath = (endpoint: string): SchemaPath | undefined => {
   const pathMatch = endpoint.match(/^\/([^#]+)/);
   if (!pathMatch) {
-    return undefined;
+    return;
   }
   const match = pathMatch[1];
   const lastSlashIndex = match.lastIndexOf('/');
@@ -44,25 +44,25 @@ const parsePath = (endpoint: string): SchemaPath | undefined => {
 const parseFragment = (url: string): string | undefined => {
   const pathMatch = url.match(/^[^#]*#\/?(?:(?:\$defs|definitions)\/)?(.*)$/);
   if (!pathMatch) {
-    return undefined;
+    return;
   }
   return pathMatch[1];
 };
 
 export const parseSchemaId = (id?: string): SchemaId | undefined => {
   if (!id) {
-    return undefined;
+    return;
   }
   const authority = parseAuthority(id);
   if (authority === undefined && !id.startsWith('/')) {
-    return undefined;
+    return;
   }
   const endpoint = authority === undefined
     ? id
     : id.substring(authority.length);
   const path = parsePath(endpoint);
   if (!path) {
-    return undefined;
+    return;
   }
   return {
     authority,
@@ -73,7 +73,7 @@ export const parseSchemaId = (id?: string): SchemaId | undefined => {
 
 export const parseSchemaRef = (ref?: string): SchemaRef | undefined => {
   if (!ref) {
-    return undefined;
+    return;
   }
   const authority = parseAuthority(ref);
   const endpoint = authority === undefined

@@ -10,7 +10,7 @@ const SuppressNGenerator = (suppressCount: number): string => {
 
 export const OneOfNGenerator = (typeCount: number): string | undefined => {
   if (!Number.isInteger(typeCount) || typeCount < 2) {
-    return undefined;
+    return;
   }
   const typeArgs: string[] = [];
   for (let i = 0; i < typeCount; i++) {

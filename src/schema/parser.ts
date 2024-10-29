@@ -47,7 +47,7 @@ const parseSchema = (rawSchema: RawSchema): Schema => {
 
 const parseType = (type?: string | string[]): Set<SchemaBasicType> | undefined => {
   if (!type) {
-    return undefined;
+    return;
   }
   const typeArray = (typeof type === 'string')
     ? [type]
@@ -88,7 +88,7 @@ const parseCollection = (rawSchema: RawSchema): SchemaCollection | undefined => 
 
 const parseItems = (items?: RawSchema | RawSchema[]): Schema | Schema[] | undefined => {
   if (!items) {
-    return undefined;
+    return;
   }
   if (Array.isArray(items)) {
     return items.map(parseSchema);
@@ -108,7 +108,7 @@ const parseArray = (array?: RawSchema[]): Schema[] | undefined =>
 
 const parseRecord = (record?: Record<string, RawSchema>): Map<string, Schema> | undefined => {
   if (!record) {
-    return undefined;
+    return;
   }
   const parsed: Map<string, Schema> = new Map();
   for (const key in record) {

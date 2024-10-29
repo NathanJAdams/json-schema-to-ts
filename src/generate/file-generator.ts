@@ -40,7 +40,7 @@ const schemaContentGenerator = (locatedSchema: LocatedSchema, gatheredInfo: Sche
 
 const importsGenerator = (fileLocation: FileLocation, references: References): string | undefined => {
   if (references.schema.size === 0) {
-    return undefined;
+    return;
   }
   const content: (string | undefined)[] = [];
   content.push(importMapGenerator(fileLocation, references.schema));
@@ -50,7 +50,7 @@ const importsGenerator = (fileLocation: FileLocation, references: References): s
 
 const importMapGenerator = (fileLocation: FileLocation, references: Map<FileLocation, Set<string>>): string | undefined => {
   if (references.size === 0) {
-    return undefined;
+    return;
   }
   const imports: string[] = [];
   references.forEach((names, referenceFileLocation) => {
@@ -68,7 +68,7 @@ const importMapGenerator = (fileLocation: FileLocation, references: Map<FileLoca
 
 const namedGenerator = (fileLocation: FileLocation, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
   if (gatheredInfo.namedSchemas.size === 0) {
-    return undefined;
+    return;
   }
   const content: string[] = [];
 
@@ -92,7 +92,7 @@ const namedGenerator = (fileLocation: FileLocation, gatheredInfo: SchemaGathered
 
 const oneOfTypesGenerator = (typeCounts: Set<number>): string | undefined => {
   if (typeCounts.size === 0) {
-    return undefined;
+    return;
   }
   const oneOfTypeLines: string[] = [];
   typeCounts.forEach((typeCount: number) => {
@@ -106,7 +106,7 @@ const oneOfTypesGenerator = (typeCounts: Set<number>): string | undefined => {
 
 const schemaMapGenerator = (fileLocation: FileLocation, map: Map<string, Schema> | undefined, gatheredInfo: SchemaGatheredInfo, inputInfo: SchemaInputInfo): string | undefined => {
   if (!map || map.size === 0) {
-    return undefined;
+    return;
   }
   const content: string[] = [];
   map.forEach((namedSchema, name) => {
