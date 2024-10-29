@@ -25,6 +25,28 @@ yarn add json-schema-typescript-generator -D
 
 ## Usage
 
+To generate .ts files from the command line, run the command `json-schema-typescript-generator`.
+
+Usage: `json-schema-typescript-generator [options]`
+
+| Option                                 | Description                                                                                                                                                   |
+|:---------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| -c, --cwd <DIRECTORY>                  | Working directory (default: `process.cwd()`)                                                                                                                  |
+| -s, --source <DIRECTORY>               | Source directory of schema files, relative to working directory (default: `src/schemas`)                                                                      |
+| -d, --destination <DIRECTORY>          | Destination directory of generated .ts files, relative to working directory (default: `src/generated`)                                                        |
+| -e, --encoding <ENCODING>              | Encoding of source files, one of: [`ascii`, `utf8`, `utf-8`, `utf16le`, `ucs2`, `ucs-2`, `base64`, `base64url`, `latin1`, `binary`, `hex`] (default: `utf-8`) |
+| -r, --recursive                        | Recurse into source directory and generate from nested files (default: `true`)                                                                                  |
+| -R, --no-recursive                     | Only generate from schema files directly in source directory, do not recurse deeper                                                                           |
+| -p, --pre-clean                        | Delete destination directory before generating files (default: `false`)                                                                                         |
+| -P, --no-pre-clean                     | Overwrite destination directory when generating files                                                                                                         |
+| -i, --index-files                      | Add index files (default: `true`)                                                                                                                               |
+| -I, --no-index-files                   | Do not add index files                                                                                                                                        |
+| -o, --optional-field-pattern <PATTERN> | The pattern to use for optional fields, one of: [`QUESTION`, `PIPE_UNDEFINED`] (default: `QUESTION`)                                                          |
+| -u, --untyped-type <TYPE>              | The untyped field type, one of: [`ANY`, `NEVER`, `UNDEFINED`, `UNKNOWN`] (default: `UNKNOWN`)                                                                 |
+| -h, --help                             | Display help for command                                                                                                                                      |
+
+
+It is also possible to run the command within code by importing from the library.
 To generate .ts files, invoke the `generateFiles` function with an `Options` object like so
 
 ```ts
