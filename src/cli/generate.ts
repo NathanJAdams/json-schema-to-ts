@@ -13,21 +13,21 @@ const validateEncoding = (encoding: string): string => {
   if (validEncodings.includes(encoding)) {
     return encoding;
   }
-  throw Error(`Invalid source file encoding: ${encoding}. Valid options are: ${arrayToString(validEncodings)}`);
+  throw Error(`Invalid source file encoding: '${encoding}'. Valid options are: ${arrayToString(validEncodings)}`);
 };
 
 const validatePattern = (patternName: string): string => {
   if (validPatternNames.includes(patternName)) {
     return patternName;
   }
-  throw Error(`Invalid optional field pattern: ${patternName}. Valid options are: ${arrayToString(validPatternNames)}`);
+  throw Error(`Invalid optional field pattern: '${patternName}'. Valid options are: ${arrayToString(validPatternNames)}`);
 };
 
 const validateType = (typeName: string): string => {
   if (validTypeNames.includes(typeName)) {
     return typeName;
   }
-  throw Error(`Invalid untyped type: ${typeName}. Valid options are: ${arrayToString(validTypeNames)}`);
+  throw Error(`Invalid untyped type: '${typeName}'. Valid options are: ${arrayToString(validTypeNames)}`);
 };
 
 const arrayToString = (array: string[]) => `['${array.join('\', \'')}']`;
