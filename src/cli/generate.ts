@@ -63,8 +63,8 @@ program
         }
       },
       ts: {
-        optionalFields: opts.optionalFieldPattern as OptionalFieldPattern,
-        untyped: opts.untypedType as UntypedType
+        optionalFields: OptionalFieldPattern[opts.optionalFieldPattern as keyof typeof OptionalFieldPattern],
+        untyped: UntypedType[opts.untypedType as keyof typeof UntypedType],
       }
     };
     await generateFiles(options);
