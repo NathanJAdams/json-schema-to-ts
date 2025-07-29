@@ -72,7 +72,6 @@ const namedGenerator = (fileLocation: FileLocation, gatheredInfo: SchemaGathered
   }
   const content: string[] = [];
 
-  /* eslint-disable no-constant-condition */
   while (true) {
     const map: Map<string, Schema> = gatheredInfo.namedSchemas;
     gatheredInfo = {
