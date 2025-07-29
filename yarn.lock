@@ -3246,7 +3246,7 @@ __metadata:
     ts-jest: "npm:29.4.0"
     typescript: "npm:5.8.3"
   bin:
-    json-schema-typescript-generator: ./dist/cli/generate.js
+    json-schema-typescript-generator: ./dist/cjs/cli/generate.js
   languageName: unknown
   linkType: soft
 
