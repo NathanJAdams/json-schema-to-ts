@@ -1,13 +1,16 @@
-# Node artifact files
-artifacts/
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+node_modules
+
 dist/
-node_modules/
 
-# Log files
-*.log
-
-# JetBrains IDE
 .idea/
-
-# VSCode IDE
 .vscode/
+
+*.log

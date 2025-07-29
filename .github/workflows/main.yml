@@ -16,6 +16,8 @@ jobs:
         run: echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" > ~/.npmrc
       - name: Install
         run: yarn install
+      - name: Lint
+        run: yarn lint
       - name: Test
         run: yarn test
       - name: Build
