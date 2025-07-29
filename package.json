@@ -8,6 +8,7 @@
   "license": "MIT",
   "homepage": "https://github.com/NathanJAdams/json-schema-to-ts",
   "repository": {
+    "type": "git",
     "url": "https://github.com/NathanJAdams/json-schema-to-ts"
   },
   "keywords": [
@@ -24,7 +25,9 @@
     "LICENSE",
     "README.md"
   ],
-  "bin": "./dist/cjs/cli/generate.js",
+  "bin": {
+    "json-schema-typescript-generator": "./dist/cjs/cli/generate.js"
+  },
   "main": "./dist/cjs/index.cjs.js",
   "module": "./dist/esm/index.esm.js",
   "types": "./dist/types/index.d.ts",
@@ -32,7 +35,8 @@
     ".": {
       "import": "./dist/esm/index.esm.js",
       "require": "./dist/cjs/index.cjs.js",
-      "types": "./dist/types/index.d.ts"
+      "types": "./dist/types/index.d.ts",
+      "default": "./dist/esm/index.esm.js"
     }
   },
   "scripts": {
