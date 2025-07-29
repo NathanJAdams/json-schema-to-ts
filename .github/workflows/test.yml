@@ -1,11 +1,11 @@
-name: Publish Master
+name: Lint and test
 
 on:
   push:
     branches: [ '*' ]
 
 jobs:
-  publish:
+  lint-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
