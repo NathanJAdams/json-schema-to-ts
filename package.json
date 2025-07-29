@@ -1,6 +1,6 @@
 {
   "name": "json-schema-typescript-generator",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "author": {
     "name": "Nathan Adams",
     "url": "https://github.com/NathanJAdams"
@@ -18,6 +18,11 @@
     "json-schema",
     "ts",
     "typescript"
+  ],
+  "files": [
+    "dist/",
+    "LICENSE",
+    "README.md"
   ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
