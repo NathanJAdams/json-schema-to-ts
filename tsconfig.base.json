@@ -10,6 +10,9 @@
     "strict": true,
     "target": "ES2020"
   },
+  "exclude": [
+    "dist"
+  ],
   "include": [
     "src"
   ]
