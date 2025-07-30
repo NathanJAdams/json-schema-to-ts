@@ -1130,7 +1130,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:30.0.0":
+"@types/jest@npm:^30.0.0":
   version: 30.0.0
   resolution: "@types/jest@npm:30.0.0"
   dependencies:
@@ -1156,12 +1156,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^20":
-  version: 20.19.9
-  resolution: "@types/node@npm:20.19.9"
+"@types/node@npm:^22":
+  version: 22.17.0
+  resolution: "@types/node@npm:22.17.0"
   dependencies:
     undici-types: "npm:~6.21.0"
-  checksum: 10c0/c6738131f1698258a5ac1e0185e4fc56977f7f566cd0ee11167f93f2339478470257bd82c5e1908a936a204e0ad7996d741356a1a07c04997a236161ea23a874
+  checksum: 10c0/e1c603b660d3de3243dfc02ded5d40623ff3f36315ffbdd8cdc81bc2c5a8da172035879d437b72e9fa61ca01827f28e9c2b0c32898f411a8e9ba0a5efac0b4ca
   languageName: node
   linkType: hard
 
@@ -1188,7 +1188,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:8.38.0":
+"@typescript-eslint/eslint-plugin@npm:^8.38.0":
   version: 8.38.0
   resolution: "@typescript-eslint/eslint-plugin@npm:8.38.0"
   dependencies:
@@ -1209,7 +1209,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:8.38.0":
+"@typescript-eslint/parser@npm:^8.38.0":
   version: 8.38.0
   resolution: "@typescript-eslint/parser@npm:8.38.0"
   dependencies:
@@ -2099,7 +2099,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:9.32.0":
+"eslint@npm:^9.32.0":
   version: 9.32.0
   resolution: "eslint@npm:9.32.0"
   dependencies:
@@ -3232,7 +3232,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest@npm:30.0.5":
+"jest@npm:^30.0.5":
   version: 30.0.5
   resolution: "jest@npm:30.0.5"
   dependencies:
@@ -3322,17 +3322,17 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "json-schema-typescript-generator@workspace:."
   dependencies:
-    "@types/jest": "npm:30.0.0"
-    "@types/node": "npm:^20"
-    "@typescript-eslint/eslint-plugin": "npm:8.38.0"
-    "@typescript-eslint/parser": "npm:8.38.0"
+    "@types/jest": "npm:^30.0.0"
+    "@types/node": "npm:^22"
+    "@typescript-eslint/eslint-plugin": "npm:^8.38.0"
+    "@typescript-eslint/parser": "npm:^8.38.0"
     commander: "npm:^14.0.0"
-    eslint: "npm:9.32.0"
-    jest: "npm:30.0.5"
+    eslint: "npm:^9.32.0"
+    jest: "npm:^30.0.5"
     rimraf: "npm:^6.0.1"
-    ts-jest: "npm:29.4.0"
-    ts-node: "npm:10.9.2"
-    typescript: "npm:5.8.3"
+    ts-jest: "npm:^29.4.0"
+    ts-node: "npm:^10.9.2"
+    typescript: "npm:^5.8.3"
   bin:
     json-schema-typescript-generator: ./dist/cjs/cli/generate.js
   languageName: unknown
@@ -4342,7 +4342,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-jest@npm:29.4.0":
+"ts-jest@npm:^29.4.0":
   version: 29.4.0
   resolution: "ts-jest@npm:29.4.0"
   dependencies:
@@ -4382,7 +4382,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node@npm:10.9.2":
+"ts-node@npm:^10.9.2":
   version: 10.9.2
   resolution: "ts-node@npm:10.9.2"
   dependencies:
@@ -4457,7 +4457,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:5.8.3":
+"typescript@npm:^5.8.3":
   version: 5.8.3
   resolution: "typescript@npm:5.8.3"
   bin:
@@ -4467,7 +4467,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A^5.8.3#optional!builtin<compat/typescript>":
   version: 5.8.3
   resolution: "typescript@patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>::version=5.8.3&hash=5786d5"
   bin:
