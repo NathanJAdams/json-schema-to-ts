@@ -25,9 +25,7 @@
     "LICENSE",
     "README.md"
   ],
-  "bin": {
-    "json-schema-typescript-generator": "./dist/cjs/cli/generate.js"
-  },
+  "bin": "./dist/cjs/cli/generate.js",
   "main": "./dist/cjs/index.cjs.js",
   "module": "./dist/esm/index.esm.js",
   "types": "./dist/types/index.d.ts",
@@ -60,6 +58,8 @@
     "eslint": "9.32.0",
     "jest": "30.0.5",
     "ts-jest": "29.4.0",
+    "ts-node": "10.9.2",
     "typescript": "5.8.3"
-  }
+  },
+  "packageManager": "yarn@4.9.2"
 }
