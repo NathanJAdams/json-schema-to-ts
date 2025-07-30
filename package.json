@@ -1,5 +1,6 @@
 {
   "name": "json-schema-typescript-generator",
+  "description": "Generate typescript types from json schemas",
   "version": "2.2.5",
   "author": {
     "name": "Nathan Adams",
