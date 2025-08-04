@@ -1,5 +1,5 @@
 export * from './generateFiles';
-export {
+export type {
   OptionalFieldPattern,
   UntypedType,
   Options

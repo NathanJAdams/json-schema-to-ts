@@ -1,7 +1,7 @@
 {
   "name": "json-schema-typescript-generator",
   "description": "Generate typescript types from json schemas",
-  "version": "2.2.6",
+  "version": "2.2.7",
   "author": {
     "name": "Nathan Adams",
     "url": "https://github.com/NathanJAdams"
@@ -26,25 +26,20 @@
     "LICENSE",
     "README.md"
   ],
-  "bin": "./dist/cjs/cli/generate.js",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
-  "types": "./dist/types/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "bin": "./dist/cli/generate.js",
   "exports": {
     ".": {
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js",
-      "types": "./dist/types/index.d.ts",
-      "default": "./dist/esm/index.js"
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
     }
   },
   "scripts": {
-    "build": "yarn clean && yarn build:cjs && yarn build:esm && yarn build:types",
-    "build:cjs": "tsc --project tsconfig.cjs.json",
-    "build:esm": "tsc --project tsconfig.esm.json",
-    "build:types": "tsc --project tsconfig.types.json",
+    "build": "tsup",
     "clean": "rimraf ./dist/",
-    "lint": "eslint . --fix",
+    "lint": "eslint ./src --fix",
     "test": "jest --silent=false"
   },
   "dependencies": {
@@ -60,6 +55,7 @@
     "jest": "^30.0.5",
     "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
+    "tsup": "^8.5.0",
     "typescript": "^5.8.3"
   },
   "packageManager": "yarn@4.9.2"
