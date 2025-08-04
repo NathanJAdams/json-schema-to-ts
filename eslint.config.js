@@ -4,17 +4,10 @@ import tsParser from '@typescript-eslint/parser';
 export default [
   {
     files: ['src/**/*.ts'],
-    ignores: [
-      'dist/**',
-      'node_modules/**',
-      '**/*.log',
-      '.idea/**',
-      '.vscode/**',
-    ],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
-        project: './tsconfig.eslint.json',
+        project: './tsconfig.json',
         tsconfigRootDir: import.meta.dirname,
       },
       ecmaVersion: 2021,
