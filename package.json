@@ -34,16 +34,12 @@
     ".": {
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
-    },
-    "./cli/generate": {
-      "import": "./dist/cli/generate.js",
-      "require": "./dist/cli/generate.js"
     }
   },
   "scripts": {
     "build": "tsup",
     "clean": "rimraf ./dist/",
-    "lint": "eslint ./src --fix --debug",
+    "lint": "eslint ./src --fix",
     "test": "jest --silent=false"
   },
   "dependencies": {
